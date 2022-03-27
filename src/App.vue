@@ -1,36 +1,47 @@
 <template>
 <!--  <img alt="Vue logo" src="./assets/logo.png" />-->
+  <Form
+    v-if="!formSubmitted"
+    :on-form-submit="onFormSubmit"
+  />
   <Page
-    v-if="mapParameters"
+    v-if="mapParameters && formSubmitted"
     :mapParameters="mapParameters"
   />
 </template>
 
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import Page from './components/Page.vue'
-import {onMounted, ref} from "vue";
+import Form from './components/Form.vue'
+import { onMounted, ref } from "vue";
 
 const mapParameters = ref()
+const formSubmitted = ref()
 
-onMounted(() => {
-  const mapParams = new URLSearchParams(window.location.search)
-  if (mapParams.get('coords')) {
-    mapParameters.value = {
-      coords: mapParams.get('coords'),
-      googleMaps: mapParams.get('googleMaps'),
-      runsiteName: mapParams.get('runsiteName'),
-      hare: mapParams.get('hare'),
-    };
-  }
-  console.log(mapParameters.value, 'runsite found!');
-});
+// onMounted(() => {
+//   const mapParams = new URLSearchParams(window.location.search)
+//   if (mapParams.get('coords')) {
+//     mapParameters.value = {
+//       coords: mapParams.get('coords'),
+//       googleMaps: mapParams.get('googleMaps'),
+//       runsiteName: mapParams.get('runsiteName'),
+//       hare: mapParams.get('hare'),
+//     };
+//   }
+//   console.log(mapParameters.value, 'runsite found!');
+// });
+
+const onFormSubmit = (formData: any) => {
+  console.log(formData);
+  mapParameters.value = formData
+  formSubmitted.value = true
+}
 </script>
 
 <style>
 html, body {
   background-color: #2c2c2c;
+  height: 100%;
 }
 
 #app {
@@ -39,5 +50,6 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
 }
 </style>

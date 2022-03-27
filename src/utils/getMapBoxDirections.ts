@@ -1,4 +1,6 @@
-const getRoute = async (map, coords, token) => {
+import mapboxgl from 'mapbox-gl';
+
+const getRoute = async (map: mapboxgl.Map, coords: any, token: string) => {
   // make a directions request using cycling profile
   // an arbitrary start will always be the same
   // only the end or destination will change
@@ -36,11 +38,42 @@ const getRoute = async (map, coords, token) => {
         'line-cap': 'round'
       },
       paint: {
-        'line-color': '#3887be',
-        'line-width': 5,
-        'line-opacity': 0.75
+        'line-color': '#d917a5',
+        'line-width': 5.5,
+        'line-opacity': 1,
+        'line-dasharray': [2, 2.3],
       }
     });
+    map.addLayer({
+      id: 'point',
+      type: 'circle',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'Point',
+                coordinates: coords
+              }
+            }
+          ]
+        }
+      },
+      paint: {
+        'circle-radius': 10,
+        'circle-color': '#3887be'
+      }
+    });
+    const el = document.createElement('div');
+    el.className = 'hash-marker';
+    console.log(coords);
+    new mapboxgl.Marker(el)
+      .setLngLat(coords)
+      .addTo(map);
   }
   // add turn instructions here at the end
 }
