@@ -30,12 +30,6 @@
 
   const questions = [
     new QuestionModel({
-      title: 'Enter a Google Maps link',
-      type: QuestionType.Text,
-      placeholder: 'E.g: https://goo.gl/maps/auNwzdX6qog3iDJp9',
-      required: true,
-    }),
-    new QuestionModel({
       title: "Enter the run site's coordinates",
       type: QuestionType.Text,
       placeholder: 'E.g: -8.5060135,115.2322403',
@@ -52,12 +46,6 @@
       type: QuestionType.Text,
       placeholder: 'E.g: The Cunt of Monte Cristo',
       required: true,
-    }),
-    new QuestionModel({
-      title: "Enter a run occasion",
-      type: QuestionType.Text,
-      placeholder: '(Optional input)',
-      required: false,
     }),
     new QuestionModel({
       title: "Enter run start time",
