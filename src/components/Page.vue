@@ -12,7 +12,7 @@
         <div>
           Date: {{currentRunInfo.date}}
         </div>
-        <div>Start Time: </div>
+        <div>Start Time: {{currentRunInfo.startTime}}</div>
         <div>Location: {{currentRunInfo.runSiteName}}</div>
         <div>Hares: {{currentRunInfo.hares}}</div>
       </div>
@@ -34,20 +34,20 @@
             Beer Master: Short Shaft Hash Maps: Balderdash | Hashberdashery: No Deposit
           </p>
           <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
-          <a href="http://balihash2.com/next-run-map">http://balihash2.com/next-run-map</a>
-          <a class="social-link" href="https://facebook.com/BaliHash2/">
+          <a href="http://balihash2.com/next-run-map" target="_blank">http://balihash2.com/next-run-map</a>
+          <a class="social-link" target="_blank" href="https://facebook.com/BaliHash2/">
             <img src="https://www.facebook.com/favicon.ico" alt="">
             <span>Facebook </span>
           </a>
-          <a class="social-link" href="https://www.instagram.com/balihash.househarriers2/">
+          <a class="social-link" target="_blank" href="https://www.instagram.com/balihash.househarriers2/">
             <img src="https://www.instagram.com/favicon.ico" alt="">
             <span>Instagram </span>
           </a>
-          <a class="social-link" href="https://twitter.com/BaliHash2">
+          <a class="social-link" target="_blank" href="https://twitter.com/BaliHash2">
             <img src="https://abs.twimg.com/favicons/twitter.2.ico" alt="">
             <span>Twitter</span>
           </a>
-          <a class="social-link" href="http://balihash2.com/subscribe-bali-hash-2/">
+          <a class="social-link" target="_blank" href="http://balihash2.com/subscribe-bali-hash-2/">
             <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="">
             <span>Mailing List</span>
           </a>
