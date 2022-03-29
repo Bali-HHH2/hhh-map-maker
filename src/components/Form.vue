@@ -18,7 +18,7 @@
   const onComplete = () => {
     const answersRaw = questions.map(q => q.answer)
     const answers = {
-      googleMapsLink: answersRaw[0],
+      googleMapsLink: 'https://goo.gl/maps/jw2yvbncoyQTh3vbA', //answersRaw[0],
       coordinates: '-8.405286, 115.293728', //answersRaw[1],
       runSiteName: answersRaw[2],
       hares: answersRaw[3],
