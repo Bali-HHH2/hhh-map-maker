@@ -628,6 +628,11 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
+geo-coordinates-parser@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/geo-coordinates-parser/-/geo-coordinates-parser-1.4.4.tgz#61916b357a7c3a40869a7d7223c28c00c8b5ae03"
+  integrity sha512-0zTPieFwiFViSDKIjAj5TChcFZbtnsyc64QY0J+CARpTDG4qrhfbAj9gQ24fsFpwz6yY41TzasO0lwe8xjrXBQ==
+
 geojson-vt@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/geojson-vt/-/geojson-vt-3.2.1.tgz#f8adb614d2c1d3f6ee7c4265cad4bbf3ad60c8b7"

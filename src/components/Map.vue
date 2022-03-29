@@ -7,31 +7,29 @@
 import {ref, onMounted, toRefs} from 'vue'
 import mapboxgl from 'mapbox-gl'
 import getRoute from "../utils/getMapBoxDirections";
+import convert from 'geo-coordinates-parser'
 
 const props = defineProps({
   mapCoords: String,
 });
-
 const { mapCoords } = toRefs(props);
-const latLng = mapCoords?.value?.split(',');
 
 onMounted(async () => {
-  const coordinates = [latLng?.[1], latLng?.[0]]
+  console.log(mapCoords?.value);
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmhoaDIiLCJhIjoiY2wxODFieDlpMDkzNTNjcXY4MGZja3VqOCJ9.L660Ro6Iyqfk-k-EDfCscA';
   const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
-    center: coordinates, // starting position [lng, lat]
+    center: mapCoords?.value, // starting position [lng, lat]
     zoom: 12.3, // starting zoom
   })
   map.on('load', async () => {
-    await getRoute(map, coordinates, mapboxgl.accessToken);
+    await getRoute(map, mapCoords?.value, mapboxgl.accessToken);
   });
   map.on('idle', () => {
     map.setLayoutProperty('land', 'visibility', 'none');
     map.setLayoutProperty('hillshade', 'visibility', 'none');
   });
-  console.log(map.style);
 });
 </script>
 

@@ -63,7 +63,6 @@
 
 <style lang="scss">
   @import '@ditdot-dev/vue-flow-form/dist/vue-flow-form.css';
-  //@import '@ditdot-dev/vue-flow-form/dist/vue-flow-form.theme-minimal.css';
 
   .form-container {
     height: 100%;

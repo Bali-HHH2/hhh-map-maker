@@ -8,22 +8,22 @@
     </div>
     <div class="main-info">
       <div class="main-info__left">
-        <div>Run: #{{currentRunNumber}}</div>
+        <div>Run: #{{currentRunInfo.number}}</div>
         <div>
-          Date: {{currentRunDate}}
+          Date: {{currentRunInfo.date}}
         </div>
-        <div>Start Time: {{mapParameters.startTime}}</div>
-        <div>Location: {{mapParameters.runSiteName}}</div>
-        <div>Hares: {{mapParameters.hares}}</div>
+        <div>Start Time: </div>
+        <div>Location: {{currentRunInfo.runSiteName}}</div>
+        <div>Hares: {{currentRunInfo.hares}}</div>
       </div>
       <div class="main-info__right">
-        GPS: <a :href="mapParameters.googleMapsLink">{{mapParameters.coordinates}}</a>
-        <h2 v-if="mapParameters.occasion">{{mapParameters.occasion}}</h2>
+        GPS: <a :href="currentRunInfo.googleMapsLink" target="_blank">{{currentRunInfo.coordinates[0]}}, {{currentRunInfo.coordinates[1]}}</a>
+        <h2 v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}}</h2>
       </div>
     </div>
-    <Map v-if="mapParameters.coordinates" :map-coords="mapParameters.coordinates"/>
+    <Map v-if="currentRunInfo.coordinates" :map-coords="currentRunInfo.coordinates"/>
     <div class="bottom-info">
-      <div v-if="hairLine" class="bottom-info__left">
+      <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
         <div class="mismanagement">
           <p>
             {{ currentYear }} Mismanagement
@@ -55,7 +55,7 @@
       </div>
       <div class="bottom-info__right">
         <div class="hairline-header">Receding Hareline</div>
-        <div class="hairline-item" v-for="line in filteredHareLine">
+        <div class="hairline-item" v-for="line in currentRunInfo.filteredHareLine">
           <div class="hairline-item__number">#{{line[0]}}</div>
           <div class="hairline-item__date">{{line[1]}}</div>
           <div class="hairline-item__hare">{{line[2]}}</div>
@@ -70,26 +70,21 @@ import { ref, onBeforeMount, computed } from 'vue'
 import Map from "./Map.vue";
 import getHairLine from "../utils/getHairLine";
 
-interface mapParameters {
-  coordinates: string,
-  googleMapsLink: string,
-  runSiteName: string,
+interface pageParameters {
+  number: string,
+  date: string,
   hares: string,
+  googleMapsLink: string,
   occasion: string,
+  runSiteName: string,
+  coordinates: string,
+  filteredHareLine: string[],
   startTime: string,
 }
 
-defineProps<{ mapParameters: mapParameters }>()
+defineProps<{ currentRunInfo: pageParameters }>()
 
-const hairLine = ref()
 const currentYear = new Date().getFullYear()
-const currentRunNumber = computed(() => hairLine.value[0][0])
-const currentRunDate = computed(() => hairLine.value[0][1])
-const filteredHareLine = computed(() => hairLine.value.slice(1))
-
-onBeforeMount(async () => {
-  hairLine.value = await getHairLine()
-})
 </script>
 
 <style scoped lang="scss">
