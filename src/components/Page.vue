@@ -93,7 +93,7 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
 
 .A4 {
   background: white;

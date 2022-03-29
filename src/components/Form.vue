@@ -67,5 +67,15 @@
 
   .form-container {
     height: 100%;
+    font-family: 'Special Elite', cursive;
+    font-weight: 600;
+  }
+
+  .vff input[type=text] {
+    border-bottom: 1px solid #fff;
+    color: #0aa500;
+  }
+  .f-enter-desc {
+    color: #fff;
   }
 </style>

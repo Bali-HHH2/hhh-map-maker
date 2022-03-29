@@ -39,6 +39,8 @@ const onFormSubmit = (formData: any) => {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
 html, body {
   background-color: #2c2c2c;
   height: 100%;
@@ -49,7 +51,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #fff;
   height: 100%;
 }
 </style>
