@@ -1,5 +1,6 @@
 <template>
   <div id="map" class="map-container">
+    <h3 v-if="!mapCoords">No map coordinates published yet...</h3>
   </div>
 </template>
 
@@ -7,7 +8,6 @@
 import {ref, onMounted, toRefs} from 'vue'
 import mapboxgl from 'mapbox-gl'
 import getRoute from "../utils/getMapBoxDirections";
-import convert from 'geo-coordinates-parser'
 
 const props = defineProps({
   mapCoords: String,
@@ -15,6 +15,8 @@ const props = defineProps({
 const { mapCoords } = toRefs(props);
 
 onMounted(async () => {
+  console.log(mapCoords);
+  if (!mapCoords?.value) return;
   console.log(mapCoords?.value);
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmhoaDIiLCJhIjoiY2wxODFieDlpMDkzNTNjcXY4MGZja3VqOCJ9.L660Ro6Iyqfk-k-EDfCscA';
   const map = new mapboxgl.Map({
@@ -37,6 +39,11 @@ onMounted(async () => {
   .map-container {
     width: 100%;
     height: 500px;
+    display: grid;
+    place-content: center;
+    h3 {
+      color: #000 !important;
+    }
     canvas {
       filter: invert(1);
     }

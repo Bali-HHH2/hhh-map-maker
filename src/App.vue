@@ -17,39 +17,37 @@
 
 <script setup lang="ts">
 import Page from './components/Page.vue'
-import Form from './components/Form.vue'
+// import Form from './components/Form.vue'
 import {computed, onBeforeMount, onMounted, ref} from "vue";
 import getHairLine from "./utils/getHairLine";
 import convert from 'geo-coordinates-parser'
-
-const mapParameters = ref()
-// const formSubmitted = ref()
-
-// const onFormSubmit = (formData: any) => {
-//   console.log(formData);
-//   mapParameters.value = formData
-//   // formSubmitted.value = true
-// }
 
 const hairLine = ref()
 const filteredHareLine = computed(() => hairLine.value?.slice(1))
 const currentRunInfo = computed(() => {
   const currentRun = hairLine?.value[0]
   const coordinates = () => {
+    if (!currentRun[5]) return null
     const converted = convert(currentRun[5])
-    console.log(converted);
     return [converted.verbatimLongitude, converted.verbatimLatitude]
   }
+  const number = currentRun[0] ?? '?'
+  const date = currentRun[1] ?? '?'
+  const hares = currentRun[2] ?? '?'
+  const googleMapsLink = currentRun[5] ? `https://google.com/maps/place/${coordinates()[1]},${coordinates()[0]}` : '#'
+  const occasion = currentRun[3] ?? '?'
+  const runSiteName = currentRun[4] ?? '?'
+  const startTime = currentRun[6] ?? '?'
   return {
-    number: currentRun[0],
-    date: currentRun[1],
-    hares: currentRun[2],
-    googleMapsLink: `https://google.com/maps/place/${coordinates()[1]},${coordinates()[0]}`,
-    occasion: currentRun[3],
-    runSiteName: currentRun[4],
+    number,
+    date,
+    hares,
+    googleMapsLink,
+    occasion,
+    runSiteName,
     coordinates: coordinates(),
     filteredHareLine: filteredHareLine.value,
-    startTime: currentRun[6],
+    startTime,
   }
 })
 
@@ -64,6 +62,7 @@ onBeforeMount(async () => {
 html, body {
   background-color: #2c2c2c;
   height: 100%;
+  margin: 0;
 }
 
 #app {

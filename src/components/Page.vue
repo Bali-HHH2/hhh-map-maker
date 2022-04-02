@@ -1,11 +1,13 @@
 <template>
   <div class="A4">
-    <br>
     <div class="title">
-      <p>Bali Hash House Harriers 2</p>
-      <p>Next Run Map</p>
-      <hr>
+      <img src="../assets/logo.png" alt="">
+      <div class="title__text">
+        <p>Bali Hash House Harriers 2</p>
+        <p>Next Run Map</p>
+      </div>
     </div>
+    <hr>
     <div class="main-info">
       <div class="main-info__left">
         <div>Run: #{{currentRunInfo.number}}</div>
@@ -17,11 +19,17 @@
         <div>Hares: {{currentRunInfo.hares}}</div>
       </div>
       <div class="main-info__right">
-        GPS: <a :href="currentRunInfo.googleMapsLink" target="_blank">{{currentRunInfo.coordinates[0]}}, {{currentRunInfo.coordinates[1]}}</a>
-        <h2 v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}}</h2>
+        GPS:
+        <a v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
+          :href="currentRunInfo.googleMapsLink"
+          target="_blank"
+        >
+          {{currentRunInfo.coordinates[0]}}, {{currentRunInfo.coordinates[1]}}
+        </a>
+        <h2 v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}} Run</h2>
       </div>
     </div>
-    <Map v-if="currentRunInfo.coordinates" :map-coords="currentRunInfo.coordinates"/>
+    <Map :map-coords="currentRunInfo.coordinates"/>
     <div class="bottom-info">
       <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
         <div class="mismanagement">
@@ -54,11 +62,13 @@
         </div>
       </div>
       <div class="bottom-info__right">
-        <div class="hairline-header">Receding Hareline</div>
-        <div class="hairline-item" v-for="line in currentRunInfo.filteredHareLine">
-          <div class="hairline-item__number">#{{line[0]}}</div>
-          <div class="hairline-item__date">{{line[1]}}</div>
-          <div class="hairline-item__hare">{{line[2]}}</div>
+        <div class="hairline-container">
+          <div class="hairline-header">Receding Hareline</div>
+          <div class="hairline-item" v-for="line in currentRunInfo.filteredHareLine">
+            <div class="hairline-item__number">#{{line[0]}}</div>
+            <div class="hairline-item__date">{{line[1]}}</div>
+            <div class="hairline-item__hare">{{line[2]}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -88,9 +98,8 @@ const currentYear = new Date().getFullYear()
 </script>
 
 <style scoped lang="scss">
-
-
 .A4 {
+  position: relative;
   background: white;
   width: 21cm;
   height: 29.7cm;
@@ -106,14 +115,30 @@ const currentYear = new Date().getFullYear()
 }
 
 .title {
-  font-size: 42px;
-  p {
-    margin: -8px 0 0 0;
+  display: flex;
+  height: 100px;
+  overflow: hidden;
+  img {
+    height: 92px;
+    position: absolute;
+    left: 39px;
+    top: 12px;
   }
-  hr {
-    width: 90%;
-    border-top: 2px solid #0ca501;
+  &__text {
+    position: absolute;
+    left: 148px;
+    top: 0;
+    p {
+      font-size: 42px;
+      text-align: left;
+      line-height: 0;
+    }
   }
+}
+
+hr {
+  width: 90%;
+  border-top: 2px solid #0ca501;
 }
 
 .main-info, .bottom-info {
@@ -162,8 +187,15 @@ const currentYear = new Date().getFullYear()
   &__right {
     font-size: 16px;
     text-align: left;
-    height: 322px;
-    overflow: auto;
+    height: 356px;
+    overflow: hidden;
+    .hairline-container {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      padding-right: 24px; /* Increase/decrease this value for cross-browser compatibility */
+      box-sizing: content-box; /* So the width will be 100% + 17px */
+    }
 
     .hairline-header {
       text-align: center;
