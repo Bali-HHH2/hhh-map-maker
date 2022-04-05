@@ -34,7 +34,7 @@ const currentRunInfo = computed(() => {
   const number = currentRun[0] ?? '?'
   const date = currentRun[1] ?? '?'
   const hares = currentRun[2] ?? '?'
-  const googleMapsLink = currentRun[5] ? `https://google.com/maps/place/${coordinates()[1]},${coordinates()[0]}` : '#'
+  const googleMapsLink = currentRun[5] ? `https://www.google.com/maps/search/?api=1&query=${coordinates()[1]},${coordinates()[0]}` : '#'
   const occasion = currentRun[3] ?? '?'
   const runSiteName = currentRun[4] ?? '?'
   const startTime = currentRun[6] ?? '?'

@@ -5,7 +5,6 @@ const getHairLine = async () => {
     parseInt(value[0]) > 1500 &&
     value[2] &&
     new Date(value?.[1]) > new Date())
-  console.log(filtered);
   return filtered
 }
 

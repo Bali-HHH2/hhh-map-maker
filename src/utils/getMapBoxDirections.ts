@@ -70,7 +70,6 @@ const getRoute = async (map: mapboxgl.Map, coords: any, token: string) => {
     });
     const el = document.createElement('div');
     el.className = 'hash-marker';
-    console.log(coords);
     new mapboxgl.Marker(el)
       .setLngLat(coords)
       .addTo(map);
