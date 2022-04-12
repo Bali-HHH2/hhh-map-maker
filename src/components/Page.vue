@@ -43,22 +43,20 @@
           </p>
           <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
           <a href="http://balihash2.com/next-run-map" target="_blank">http://balihash2.com/next-run-map</a>
-          <a class="social-link" target="_blank" href="https://facebook.com/BaliHash2/">
-            <img src="https://www.facebook.com/favicon.ico" alt="">
-            <span>Facebook </span>
-          </a>
-          <a class="social-link" target="_blank" href="https://www.instagram.com/balihash.househarriers2/">
-            <img src="https://www.instagram.com/favicon.ico" alt="">
-            <span>Instagram </span>
-          </a>
-          <a class="social-link" target="_blank" href="https://twitter.com/BaliHash2">
-            <img src="https://abs.twimg.com/favicons/twitter.2.ico" alt="">
-            <span>Twitter</span>
-          </a>
-          <a class="social-link" target="_blank" href="http://balihash2.com/subscribe-bali-hash-2/">
-            <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="">
-            <span>Mailing List</span>
-          </a>
+          <div class="mismanagement__links">
+            <a class="social-link" target="_blank" href="https://facebook.com/BaliHash2/">
+              <img src="https://www.facebook.com/favicon.ico" alt="">
+            </a>
+            <a class="social-link" target="_blank" href="https://www.instagram.com/balihash.househarriers2/">
+              <img src="https://www.instagram.com/favicon.ico" alt="">
+            </a>
+            <a class="social-link" target="_blank" href="https://twitter.com/BaliHash2">
+              <img src="https://abs.twimg.com/favicons/twitter.2.ico" alt="">
+            </a>
+            <a class="social-link" target="_blank" href="http://balihash2.com/subscribe-bali-hash-2/">
+              <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="">
+            </a>
+          </div>
         </div>
       </div>
       <div class="bottom-info__right">
@@ -171,15 +169,25 @@ hr {
       text-align: center;
       font-size: 14px;
       margin: 0 16px 0 24px;
-      .social-link {
+      width: 350px;
+      &__links {
         display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        margin-left: 123px;
-        margin-top: 8px;
-        img {
+        justify-content: center;
+        margin-top: 16px;
+        .social-link {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          img {
+            margin-right: 8px;
+            height: 24px;
+          }
+        }
+        a {
           margin-right: 8px;
-          height: 24px;
+          img {
+            height: 24px;
+          }
         }
       }
     }
@@ -187,7 +195,7 @@ hr {
   &__right {
     font-size: 16px;
     text-align: left;
-    height: 356px;
+    height: 225px;
     overflow: hidden;
     .hairline-container {
       width: 100%;
