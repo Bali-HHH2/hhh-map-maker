@@ -7,26 +7,31 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, toRefs} from 'vue'
-import mapboxgl from 'mapbox-gl'
+import { onMounted, toRefs } from 'vue'
 import getRoute from "../utils/getMapBoxDirections";
+import mapboxgl from "mapbox-gl";
 
 const props = defineProps({
-  mapCoords: String,
+  mapCoords: [String, String],
 });
 const { mapCoords } = toRefs(props);
 
 onMounted(async () => {
   if (!mapCoords?.value) return;
-  mapboxgl.accessToken = 'pk.eyJ1IjoiYmhoaDIiLCJhIjoiY2wxODFieDlpMDkzNTNjcXY4MGZja3VqOCJ9.L660Ro6Iyqfk-k-EDfCscA';
+  const mapboxgl = await import('mapbox-gl')
   const map = new mapboxgl.Map({
+    accessToken: 'pk.eyJ1IjoiYmhoaDIiLCJhIjoiY2wxODFieDlpMDkzNTNjcXY4MGZja3VqOCJ9.L660Ro6Iyqfk-k-EDfCscA',
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
     center: mapCoords?.value, // starting position [lng, lat]
     zoom: 12.3, // starting zoom
   })
   map.on('load', async () => {
-    await getRoute(map, mapCoords?.value, mapboxgl.accessToken);
+    const el = document.createElement('div');
+    el.className = 'hash-marker';
+    new mapboxgl.Marker(el)
+        .setLngLat(mapCoords.value)
+        .addTo(map);
   });
   map.on('idle', () => {
     map.setLayoutProperty('land', 'visibility', 'none');

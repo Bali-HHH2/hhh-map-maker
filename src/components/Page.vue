@@ -1,71 +1,75 @@
 <template>
-  <div class="A4">
-    <div class="title">
-      <img src="../assets/logo.png" alt="">
-      <div class="title__text">
-        <p>Bali Hash House Harriers 2</p>
-        <p>Next Run Map</p>
-      </div>
-    </div>
-    <hr>
-    <div class="main-info">
-      <div class="main-info__left">
-        <div>Run: #{{currentRunInfo.number}}</div>
-        <div>
-          Date: {{currentRunInfo.date}}
+  <div class="A4-container">
+    <div class="A4">
+      <div class="title">
+        <img src="../assets/logo.png" alt="">
+        <div class="title__text">
+          <p>Bali Hash House Harriers 2</p>
+          <p>Next Run Map</p>
         </div>
-        <div>Start Time: {{currentRunInfo.startTime}}</div>
-        <div>Location: {{currentRunInfo.runSiteName}}</div>
-        <div>Hares: {{currentRunInfo.hares}}</div>
       </div>
-      <div class="main-info__right">
-        GPS:
-        <a v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
-          :href="currentRunInfo.googleMapsLink"
-          target="_blank"
-        >
-          {{currentRunInfo.coordinates[0]}}, {{currentRunInfo.coordinates[1]}}
-        </a>
-        <h2 v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}} Run</h2>
+      <hr>
+      <div class="main-info">
+        <div class="main-info__left">
+          <div>Run: #{{currentRunInfo.number}}</div>
+          <div>
+            Date: {{currentRunInfo.date}}
+          </div>
+          <div>Start Time: {{currentRunInfo.startTime}}</div>
+          <div>Location: {{currentRunInfo.runSiteName}}</div>
+        </div>
+        <div class="main-info__right">
+          GPS:
+          <a v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
+            :href="currentRunInfo.googleMapsLink"
+            target="_blank"
+          >
+            {{currentRunInfo.coordinates[1]}}, {{currentRunInfo.coordinates[0]}}
+          </a>
+          <h2 v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}} Run</h2>
+        </div>
       </div>
-    </div>
-    <Map :map-coords="currentRunInfo.coordinates"/>
-    <div class="bottom-info">
-      <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
-        <div class="mismanagement">
-          <p>
-            {{ currentYear }} Mismanagement
-          </p>
-          <p>
-            Grand Master: Nightjar | Hash Master: Serial Offender | On Sec: 69’er | RA: Wooden Eye | Hash Cash: Toilet
-            Trasher & Harelip | Backup Hash Cash: Ringtail | Hash Bank: Pain & Pleasure | Hare Raiser: Barnacle Balls |
-            Beer Master: Short Shaft Hash Maps: Balderdash | Hashberdashery: No Deposit
-          </p>
-          <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
-          <a href="http://balihash2.com/next-run-map" target="_blank">http://balihash2.com/next-run-map</a>
-          <div class="mismanagement__links">
-            <a class="social-link" target="_blank" href="https://facebook.com/BaliHash2/">
-              <img src="https://www.facebook.com/favicon.ico" alt="">
-            </a>
-            <a class="social-link" target="_blank" href="https://www.instagram.com/balihash.househarriers2/">
-              <img src="https://www.instagram.com/favicon.ico" alt="">
-            </a>
-            <a class="social-link" target="_blank" href="https://twitter.com/BaliHash2">
-              <img src="https://abs.twimg.com/favicons/twitter.2.ico" alt="">
-            </a>
-            <a class="social-link" target="_blank" href="http://balihash2.com/subscribe-bali-hash-2/">
-              <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="">
-            </a>
+      <div class="hares">Hares: {{currentRunInfo.hares}}</div>
+      <img class="compass" src="../assets/compass.png" alt="Prost Compass">
+      <GoogleMap v-if="!willUseMapBox" :map-coords="currentRunInfo.coordinates"/>
+      <MapBoxMap v-else :map-coords="currentRunInfo.coordinates"/>
+      <div class="bottom-info">
+        <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
+          <div class="mismanagement">
+            <p>
+              {{ currentYear }} Mismanagement
+            </p>
+            <p>
+              Grand Master: Nightjar | Hash Master: Serial Offender | On Sec: 69’er | RA: Wooden Eye | Hash Cash: Toilet
+              Trasher & Harelip | Backup Hash Cash: Ringtail | Hash Bank: Pain & Pleasure | Hare Raiser: Barnacle Balls |
+              Beer Master: Short Shaft Hash Maps: Balderdash | Hashberdashery: No Deposit
+            </p>
+            <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
+            <a href="http://balihash2.com/next-run-map" target="_blank">http://balihash2.com/next-run-map</a>
+            <div class="mismanagement__links">
+              <a class="social-link" target="_blank" href="https://facebook.com/BaliHash2/">
+                <img src="https://www.facebook.com/favicon.ico" alt="">
+              </a>
+              <a class="social-link" target="_blank" href="https://www.instagram.com/balihash.househarriers2/">
+                <img src="https://www.instagram.com/favicon.ico" alt="">
+              </a>
+              <a class="social-link" target="_blank" href="https://twitter.com/BaliHash2">
+                <img src="https://abs.twimg.com/favicons/twitter.2.ico" alt="">
+              </a>
+              <a class="social-link" target="_blank" href="http://balihash2.com/subscribe-bali-hash-2/">
+                <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="">
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="bottom-info__right">
-        <div class="hairline-container">
-          <div class="hairline-header">Receding Hareline</div>
-          <div class="hairline-item" v-for="line in currentRunInfo.filteredHareLine">
-            <div class="hairline-item__number">#{{line[0]}}</div>
-            <div class="hairline-item__date">{{line[1]}}</div>
-            <div class="hairline-item__hare">{{line[2]}}</div>
+        <div class="bottom-info__right">
+          <div class="hairline-container">
+            <div class="hairline-header">Receding Hareline</div>
+            <div class="hairline-item" v-for="line in currentRunInfo.filteredHareLine">
+              <div class="hairline-item__number">#{{line[0]}}</div>
+              <div class="hairline-item__date">{{line[1]}}</div>
+              <div class="hairline-item__hare">{{line[2]}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -75,8 +79,16 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
-import Map from "./Map.vue";
+import MapBoxMap from "./MapBoxMap.vue";
+import GoogleMap from "./GoogleMap.vue";
 import getHairLine from "../utils/getHairLine";
+
+declare global {
+  interface Window {
+    initMap: () => void;
+    useMapBox: () => void;
+  }
+}
 
 interface pageParameters {
   number: string,
@@ -93,9 +105,20 @@ interface pageParameters {
 defineProps<{ currentRunInfo: pageParameters }>()
 
 const currentYear = new Date().getFullYear()
+
+let willUseMapBox = ref(false);
+
+window.useMapBox = () => {
+  willUseMapBox.value = true
+}
 </script>
 
 <style scoped lang="scss">
+.A4-container {
+  width: 100%;
+  height: 100%;
+}
+
 .A4 {
   position: relative;
   background: white;
@@ -104,12 +127,22 @@ const currentYear = new Date().getFullYear()
   display: block;
   margin: 0 auto 0.5cm;
   box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  //@media screen and (min-width: 800px) {
+  //  width: 21cm;
+  //  height: 29.7cm;
+  //}
 }
 
-.title, .main-info, .bottom-info {
+.title, .main-info, .bottom-info, .hares {
   font-family: 'Special Elite', cursive;
   font-weight: 600;
   color: #0ca501;
+}
+
+.hares {
+  font-size: 20px;
+  text-align: left;
+  margin: 0 40px;
 }
 
 .title {
@@ -158,6 +191,16 @@ hr {
       margin-bottom: 4px;
     }
   }
+}
+
+.compass {
+  position: absolute;
+  height: 228px;
+  bottom: 278px;
+  width: auto;
+  left: 10px;
+  z-index: 1;
+  filter: drop-shadow(0px 0px 2px #fff);
 }
 
 .bottom-info {
