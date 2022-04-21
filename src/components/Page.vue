@@ -30,7 +30,6 @@
         </div>
       </div>
       <div class="hares">Hares: {{currentRunInfo.hares}}</div>
-      <img class="compass" src="../assets/compass.png" alt="Prost Compass">
       <GoogleMap v-if="!willUseMapBox" :map-coords="currentRunInfo.coordinates"/>
       <MapBoxMap v-else :map-coords="currentRunInfo.coordinates"/>
       <div class="bottom-info">
@@ -116,7 +115,6 @@ window.useMapBox = () => {
 <style scoped lang="scss">
 .A4-container {
   width: 100%;
-  height: 100%;
 }
 
 .A4 {
@@ -127,10 +125,48 @@ window.useMapBox = () => {
   display: block;
   margin: 0 auto 0.5cm;
   box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-  //@media screen and (min-width: 800px) {
-  //  width: 21cm;
-  //  height: 29.7cm;
-  //}
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 20px;
+    .main-info, .hares {
+      font-size: unset;
+      margin: 0 18px;
+    }
+    .compass {
+      height: 160px;
+    }
+    .title {
+      img {
+        position: unset;
+        margin-left: 18px;
+        margin-right: 18px;
+        margin-top: 16px;
+      }
+      &__text {
+        position: unset;
+        margin-top: 16px;
+        p {
+          margin: 0;
+          font-size: 28px;
+          text-align: left;
+          line-height: 1em;
+        }
+      }
+    }
+    .bottom-info {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    .hairline-container {
+      margin: 0 auto;
+      max-width: 400px;
+      padding: 0 18px !important;
+    }
+    .mismanagement {
+      width: unset !important;
+    }
+  }
 }
 
 .title, .main-info, .bottom-info, .hares {
@@ -191,16 +227,6 @@ hr {
       margin-bottom: 4px;
     }
   }
-}
-
-.compass {
-  position: absolute;
-  height: 228px;
-  bottom: 278px;
-  width: auto;
-  left: 10px;
-  z-index: 1;
-  filter: drop-shadow(0px 0px 2px #fff);
 }
 
 .bottom-info {

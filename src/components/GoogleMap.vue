@@ -1,5 +1,7 @@
 <template>
-  <div v-if="mapCoords" id="map" class="map-container">
+  <div class="map" v-if="mapCoords">
+    <img class="compass" src="../assets/compass.png" alt="Prost Compass">
+    <div id="map" class="map-container"></div>
   </div>
   <div v-else class="map-container__no-map">
     <h3 v-if="!mapCoords">No map coordinates published yet...</h3>
@@ -23,7 +25,6 @@ onMounted(async () => {
   const loader = new Loader({
     apiKey: "AIzaSyBu5XBrgLw5AE4dFw5hoYHdfc72-5T5lAk",
     version: "weekly",
-    // ...additionalOptions,
   });
 
   loader.load().then(() => {
@@ -32,32 +33,28 @@ onMounted(async () => {
       center: { lat, lng },
       zoom: 15,
     });
-    const hashMarker = new google.maps.Marker({
+    new google.maps.Marker({
       position: { lat, lng },
       map,
       icon: mapMarker2,
     });
   });
-
-  // if (!mapCoords?.value) return;
-  // mapboxgl.accessToken = 'pk.eyJ1IjoiYmhoaDIiLCJhIjoiY2wxODFieDlpMDkzNTNjcXY4MGZja3VqOCJ9.L660Ro6Iyqfk-k-EDfCscA';
-  // const map = new mapboxgl.Map({
-  //   container: 'map', // container ID
-  //   style: 'mapbox://styles/mapbox/streets-v11', // style URL
-  //   center: mapCoords?.value, // starting position [lng, lat]
-  //   zoom: 12.3, // starting zoom
-  // })
-  // map.on('load', async () => {
-  //   await getRoute(map, mapCoords?.value, mapboxgl.accessToken);
-  // });
-  // map.on('idle', () => {
-  //   map.setLayoutProperty('land', 'visibility', 'none');
-  //   map.setLayoutProperty('hillshade', 'visibility', 'none');
-  // });
 });
 </script>
 
 <style lang="scss">
+.map {
+  position: relative;
+  .compass {
+    position: absolute;
+    height: 160px;
+    bottom: 10px;
+    width: auto;
+    left: 10px;
+    z-index: 1;
+    filter: drop-shadow(0px 0px 2px #fff);
+  }
+}
   .map-container, .map-container__no-map {
     width: 100%;
     height: 600px;
