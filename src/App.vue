@@ -31,13 +31,13 @@ const currentRunInfo = computed(() => {
     const converted = convert(currentRun[5])
     return [converted.verbatimLongitude, converted.verbatimLatitude]
   }
-  const number = currentRun[0] ?? '?'
-  const date = currentRun[1] ?? '?'
-  const hares = currentRun[2] ?? '?'
+  const number = currentRun[0] || '?'
+  const date = currentRun[1] || '?'
+  const hares = currentRun[2] || '?'
   const googleMapsLink = currentRun[5] ? `https://www.google.com/maps/search/?api=1&query=${coordinates()[1]},${coordinates()[0]}` : '#'
-  const occasion = currentRun[3] ?? '?'
-  const runSiteName = currentRun[4] ?? '?'
-  const startTime = currentRun[6] ?? '?'
+  const occasion = currentRun[3] || '?'
+  const runSiteName = currentRun[4] || 'Waiting on hares...'
+  const startTime = currentRun[6] || '?'
   return {
     number,
     date,

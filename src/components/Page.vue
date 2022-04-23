@@ -26,6 +26,7 @@
           >
             {{currentRunInfo.coordinates[1]}}, {{currentRunInfo.coordinates[0]}}
           </a>
+          <span v-else>Waiting on hares...</span>
           <h2 v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}} Run</h2>
         </div>
       </div>

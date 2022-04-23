@@ -5,6 +5,7 @@
   </div>
   <div v-else class="map-container__no-map">
     <h3 v-if="!mapCoords">No map coordinates published yet...</h3>
+    <img src="../assets/map-placeholder.jpg" alt="No Map available yet">
   </div>
 </template>
 
@@ -18,17 +19,16 @@ const props = defineProps({
   mapCoords: Array,
 });
 const { mapCoords } = toRefs(props);
-const lat = parseFloat(mapCoords.value[1])
-const lng = parseFloat(mapCoords.value[0])
+const lat = parseFloat(mapCoords.value?.[1])
+const lng = parseFloat(mapCoords.value?.[0])
 
 onMounted(async () => {
   const loader = new Loader({
     apiKey: "AIzaSyBu5XBrgLw5AE4dFw5hoYHdfc72-5T5lAk",
     version: "weekly",
   });
-
+  if (!lat || !lng) return;
   loader.load().then(() => {
-    console.log(lat, lng);
     const map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
       center: { lat, lng },
       zoom: 15,
@@ -59,7 +59,13 @@ onMounted(async () => {
     width: 100%;
     height: 600px;
     h3 {
+      position: absolute;
       color: #000 !important;
+      z-index: 1;
+    }
+    img {
+      width: 100%;
+      filter: blur(9px);
     }
   }
 
