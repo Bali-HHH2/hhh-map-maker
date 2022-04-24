@@ -65,12 +65,14 @@ onMounted(async () => {
     }
     img {
       width: 100%;
-      filter: blur(9px);
     }
   }
 
   .map-container__no-map {
     display: grid;
     place-items: center;
+    img {
+      filter: blur(9px);
+    }
   }
 </style>
