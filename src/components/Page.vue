@@ -113,7 +113,7 @@ window.useMapBox = () => {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .A4-container {
   width: 100%;
 }
@@ -297,6 +297,9 @@ hr {
   body, .A4 {
     margin: 0;
     box-shadow: none;
+  }
+  .map, .map-container {
+    height: 15.5cm!important;
   }
 }
 </style>

@@ -38,7 +38,17 @@ onMounted(async () => {
       map,
       icon: mapMarker2,
     });
-  });
+    // Resize map before printing so it fits the page.
+    window.addEventListener('beforeprint', (event) => {
+      google.maps.event.trigger(map, 'resize');
+    });
+    // Check if the print param is passed to the page.
+    google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
+      if (window.location.href.includes('print')) {
+        window.print()
+      }
+    });
+  })
 });
 </script>
 

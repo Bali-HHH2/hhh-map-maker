@@ -4,6 +4,7 @@
 <!--    v-if="!formSubmitted"-->
 <!--    :on-form-submit="onFormSubmit"-->
 <!--  />-->
+  <button class="print-button" @click="print">Print Map</button>
   <Page
     v-if="hairLine"
     :currentRunInfo="currentRunInfo"
@@ -22,6 +23,8 @@ import {computed, onBeforeMount, onMounted, ref} from "vue";
 import getHairLine from "./utils/getHairLine";
 import convert from 'geo-coordinates-parser'
 
+const print = () => window.print()
+
 const hairLine = ref()
 const filteredHareLine = computed(() => hairLine.value?.slice(1))
 const currentRunInfo = computed(() => {
@@ -38,6 +41,7 @@ const currentRunInfo = computed(() => {
   const occasion = currentRun[3] || '?'
   const runSiteName = currentRun[4] || 'Waiting on hares...'
   const startTime = currentRun[6] || '?'
+  document.title = `BHHH2 Run #${number} - ${runSiteName}`
   return {
     number,
     date,
@@ -74,6 +78,19 @@ html, body {
   height: 100%;
   .loading {
     text-align: center;
+  }
+  .print-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    z-index: 100;
+    margin: 10px;
   }
 }
 </style>
