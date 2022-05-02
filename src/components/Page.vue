@@ -116,6 +116,8 @@ window.useMapBox = () => {
 <style lang="scss">
 .A4-container {
   width: 100%;
+  padding-bottom: 30px;
+  padding-top: 30px;
 }
 
 .A4 {
@@ -298,8 +300,14 @@ hr {
     margin: 0;
     box-shadow: none;
   }
+  .A4-container {
+    padding: 0 !important;
+  }
   .map, .map-container {
     height: 15.5cm!important;
+  }
+  .print-button {
+    display: none;
   }
 }
 </style>

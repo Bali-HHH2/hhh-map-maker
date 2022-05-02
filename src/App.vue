@@ -19,13 +19,14 @@
 <script setup lang="ts">
 import Page from './components/Page.vue'
 // import Form from './components/Form.vue'
-import {computed, onBeforeMount, onMounted, ref} from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 import getHairLine from "./utils/getHairLine";
 import convert from 'geo-coordinates-parser'
 
 const print = () => window.print()
 
 const hairLine = ref()
+const backgroundColor = ref({backgroundColor: 'red'})
 const filteredHareLine = computed(() => hairLine.value?.slice(1))
 const currentRunInfo = computed(() => {
   const currentRun = hairLine?.value[0]
@@ -55,6 +56,13 @@ const currentRunInfo = computed(() => {
   }
 })
 
+// const backgroundColor = computed(() => {
+//   const color = window.location.href.includes('transparent') ? '#2c2c2c' : '#fff'
+//   return {
+//     color,
+//   }
+// })
+
 onBeforeMount(async () => {
   hairLine.value = await getHairLine()
 })
@@ -64,7 +72,6 @@ onBeforeMount(async () => {
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
 html, body {
-  background-color: #2c2c2c;
   height: 100%;
   margin: 0;
 }
