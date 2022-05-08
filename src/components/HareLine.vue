@@ -21,7 +21,7 @@ import { ref } from 'vue'
 defineProps<{
   hareLine: any,
   showingPreviousRuns: boolean,
-  onClickPreviousRun: () => null
+  onClickPreviousRun: (line: string[]) => null
 }>()
 
 const reload = () => {
