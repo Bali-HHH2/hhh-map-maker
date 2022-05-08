@@ -1,12 +1,15 @@
 <template>
-<!--  <img alt="Vue logo" src="./assets/logo.png" />-->
-<!--  <Form-->
-<!--    v-if="!formSubmitted"-->
-<!--    :on-form-submit="onFormSubmit"-->
-<!--  />-->
   <button class="print-button" @click="print">Print Map</button>
+  <button class="past-map-button" @click="showPreviousRuns = !showPreviousRuns">View Past Maps</button>
+  <HareLine
+    v-if="showPreviousRuns"
+    :hare-line="fullHairLine"
+    :showing-previous-runs="true"
+    :on-click-previous-run="onClickPreviousRun"
+    @close="showPreviousRuns = false"
+  />
   <Page
-    v-if="hairLine"
+    v-if="hairLine && !showPreviousRuns"
     :currentRunInfo="currentRunInfo"
   />
   <div class="loading" v-else>
@@ -18,56 +21,35 @@
 
 <script setup lang="ts">
 import Page from './components/Page.vue'
-import {computed, onBeforeMount, ref} from "vue";
+import { onBeforeMount, ref } from "vue";
 import getHareLine from "./utils/getHareLine";
-import convert from 'geo-coordinates-parser'
-import { addDays } from "date-fns";
-import isInCurrentWeek from "./utils/isInCurrentWeek";
+import { subDays } from "date-fns";
+import { currentRun, formRunObject } from "./utils/currentRun";
+import HareLine from "./components/HareLine.vue";
 
 const print = () => window.print()
 
+const fullHairLine = ref()
 const hairLine = ref()
-const backgroundColor = ref({backgroundColor: 'red'})
-const filteredHareLine = computed(() => hairLine.value?.slice(1))
-const currentRunInfo = computed(() => {
-  console.log(addDays(new Date(), 1))
-  const currentRun = hairLine.value.find((e: String[]) => isInCurrentWeek(new Date(e[1])))
-  const coordinates = () => {
-    if (!currentRun[5]) return null
-    const converted = convert(currentRun[5])
-    return [converted.verbatimLongitude, converted.verbatimLatitude]
-  }
-  const number = currentRun[0] || '?'
-  const date = currentRun[1] || '?'
-  const hares = currentRun[2] || '?'
-  const googleMapsLink = currentRun[5] ? `https://www.google.com/maps/search/?api=1&query=${coordinates()[1]},${coordinates()[0]}` : '#'
-  const occasion = currentRun[3] || '?'
-  const runSiteName = currentRun[4] || 'Waiting on hares...'
-  const startTime = currentRun[6] || '?'
-  document.title = `BHHH2 Run #${number} - ${runSiteName}`
-  return {
-    number,
-    date,
-    hares,
-    googleMapsLink,
-    occasion,
-    runSiteName,
-    coordinates: coordinates(),
-    filteredHareLine: filteredHareLine.value,
-    startTime,
-  }
-})
+const showPreviousRuns = ref()
+const currentRunInfo = ref()
 
-// const backgroundColor = computed(() => {
-//   const color = window.location.href.includes('transparent') ? '#2c2c2c' : '#fff'
-//   return {
-//     color,
-//   }
-// })
+const onClickPreviousRun = (run: string[]) => {
+  if (!showPreviousRuns.value) return
+  currentRunInfo.value = formRunObject(run, fullHairLine)
+  showPreviousRuns.value = false
+}
 
 onBeforeMount(async () => {
-  hairLine.value = await getHareLine()
-  console.log(hairLine.value);
+  const unfilteredHareLine = await getHareLine()
+  fullHairLine.value = unfilteredHareLine.filter((e: string[]) =>
+    parseInt(e[0]) && e[1] && e[2] && e[3] && e[5]
+  )
+  hairLine.value = unfilteredHareLine.filter((value: string[]) =>
+      parseInt(value[0]) > 1500 &&
+      value[2] &&
+      new Date(value?.[1]) >= subDays(new Date(), 1))
+  currentRunInfo.value = currentRun(hairLine)
 })
 </script>
 
@@ -89,7 +71,7 @@ html, body {
   .loading {
     text-align: center;
   }
-  .print-button {
+  .print-button, .past-map-button {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -101,6 +83,11 @@ html, body {
     cursor: pointer;
     z-index: 100;
     margin: 10px;
+  }
+  .past-map-button {
+    right: 0;
+    left: unset;
+    width: auto;
   }
 }
 </style>

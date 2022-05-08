@@ -63,26 +63,17 @@
             </div>
           </div>
         </div>
-        <div class="bottom-info__right">
-          <div class="hairline-container">
-            <div class="hairline-header">Receding Hareline</div>
-            <div class="hairline-item" v-for="line in currentRunInfo.filteredHareLine">
-              <div class="hairline-item__number">#{{line[0]}}</div>
-              <div class="hairline-item__date">{{line[1]}}</div>
-              <div class="hairline-item__hare">{{line[2]}}</div>
-            </div>
-          </div>
-        </div>
+        <HareLine :hare-line="currentRunInfo.filteredHareLine" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, computed } from 'vue'
+import { ref } from 'vue'
 import MapBoxMap from "./MapBoxMap.vue";
 import GoogleMap from "./GoogleMap.vue";
-import getHareLine from "../utils/getHareLine";
+import HareLine from "./HareLine.vue";
 
 declare global {
   interface Window {
@@ -119,6 +110,9 @@ window.useMapBox = () => {
   width: 100%;
   padding-bottom: 30px;
   padding-top: 30px;
+  @media screen and (max-width: 800px) {
+    padding: 0;
+  }
 }
 
 .A4 {
@@ -139,6 +133,9 @@ window.useMapBox = () => {
     }
     .compass {
       height: 160px;
+    }
+    .run-time--nonstandard {
+      font-size: 18px !important;
     }
     .title {
       img {
@@ -311,7 +308,7 @@ hr {
   .map, .map-container {
     height: 15.5cm!important;
   }
-  .print-button {
+  .print-button, .past-map-button {
     display: none;
   }
 }
