@@ -6,7 +6,7 @@
         <div class="hareline-header">Previous Runs</div>
         <div class="hareline-header--latest" @click="reload()">Show Latest Run ⏱</div>
       </div>
-      <div class="hareline-item" v-for="line in hareLine" @click="onClickPreviousRun(line)">
+      <div class="hareline-item" v-for="line in hareLine" @click="onClickPreviousRun?.(line)">
         <div class="hareline-item__number">#{{line[0]}}</div>
         <div class="hareline-item__date">{{line[1]}}</div>
         <div class="hareline-item__hare">{{line[2]}}</div>
@@ -97,13 +97,7 @@ const reload = () => {
     grid-template-rows: 1fr;
     gap: 8px;
     grid-template-areas: ". . .";
+    margin-bottom: 4px;
   }
-}
-
-
-@media print {
-  //.hareline {
-  //  display: none;
-  //}
 }
 </style>
