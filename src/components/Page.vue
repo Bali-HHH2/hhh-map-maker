@@ -15,7 +15,8 @@
           <div>
             Date: {{currentRunInfo.date}}
           </div>
-          <div>Start Time: {{currentRunInfo.startTime}}</div>
+          <div v-if="currentRunInfo.startTime.match('4:30')">Start Time: {{currentRunInfo.startTime}}</div>
+          <div class="run-time--nonstandard" v-else>Start Time: {{currentRunInfo.startTime}}!!</div>
           <div>Location: {{currentRunInfo.runSiteName}}</div>
         </div>
         <div class="main-info__right">
@@ -222,6 +223,10 @@ hr {
   font-size: 20px;
   &__left {
     text-align: left;
+    .run-time--nonstandard {
+      font-size: 24px;
+      color: red;
+    }
   }
   &__right {
     text-align: right;

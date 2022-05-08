@@ -67,7 +67,7 @@ onMounted(async () => {
 }
   .map-container, .map-container__no-map {
     width: 100%;
-    height: 600px;
+    height: 590px;
     h3 {
       position: absolute;
       color: #000 !important;
