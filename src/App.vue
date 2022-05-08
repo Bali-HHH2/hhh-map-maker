@@ -50,7 +50,7 @@ onBeforeMount(async () => {
       parseInt(value[0]) > 1500 &&
       value[2] &&
       new Date(value?.[1]) >= subDays(new Date(), 1))
-  currentRunInfo.value = currentRun(fullHairLine)
+  currentRunInfo.value = currentRun(hairLine)
 })
 </script>
 
