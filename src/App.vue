@@ -43,13 +43,14 @@ const onClickPreviousRun = (run: string[]) => {
 onBeforeMount(async () => {
   const unfilteredHareLine = await getHareLine()
   fullHairLine.value = unfilteredHareLine.filter((e: string[]) =>
+      // First items needs to be a run number, and the rest need to be present to be a valid run.
     parseInt(e[0]) && e[1] && e[2] && e[3] && e[5]
   )
   hairLine.value = unfilteredHareLine.filter((value: string[]) =>
       parseInt(value[0]) > 1500 &&
       value[2] &&
       new Date(value?.[1]) >= subDays(new Date(), 1))
-  currentRunInfo.value = currentRun(hairLine)
+  currentRunInfo.value = currentRun(fullHairLine)
 })
 </script>
 
