@@ -145,11 +145,10 @@ window.useMapBox = () => {
         margin-top: 16px;
       }
       &__text {
-        position: unset;
-        margin-top: 16px;
+        margin-top: 38px;
         p {
           margin: 0;
-          font-size: 28px;
+          font-size: 4.5vw;
           text-align: left;
           line-height: 1em;
         }
