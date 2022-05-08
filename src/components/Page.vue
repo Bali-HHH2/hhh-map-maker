@@ -81,7 +81,7 @@
 import { ref, onBeforeMount, computed } from 'vue'
 import MapBoxMap from "./MapBoxMap.vue";
 import GoogleMap from "./GoogleMap.vue";
-import getHairLine from "../utils/getHairLine";
+import getHareLine from "../utils/getHareLine";
 
 declare global {
   interface Window {

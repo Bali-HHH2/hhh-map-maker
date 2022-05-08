@@ -18,10 +18,11 @@
 
 <script setup lang="ts">
 import Page from './components/Page.vue'
-// import Form from './components/Form.vue'
 import {computed, onBeforeMount, ref} from "vue";
-import getHairLine from "./utils/getHairLine";
+import getHareLine from "./utils/getHareLine";
 import convert from 'geo-coordinates-parser'
+import { addDays } from "date-fns";
+import isInCurrentWeek from "./utils/isInCurrentWeek";
 
 const print = () => window.print()
 
@@ -29,7 +30,8 @@ const hairLine = ref()
 const backgroundColor = ref({backgroundColor: 'red'})
 const filteredHareLine = computed(() => hairLine.value?.slice(1))
 const currentRunInfo = computed(() => {
-  const currentRun = hairLine?.value[0]
+  console.log(addDays(new Date(), 1))
+  const currentRun = hairLine.value.find((e: String[]) => isInCurrentWeek(new Date(e[1])))
   const coordinates = () => {
     if (!currentRun[5]) return null
     const converted = convert(currentRun[5])
@@ -64,7 +66,8 @@ const currentRunInfo = computed(() => {
 // })
 
 onBeforeMount(async () => {
-  hairLine.value = await getHairLine()
+  hairLine.value = await getHareLine()
+  console.log(hairLine.value);
 })
 </script>
 
