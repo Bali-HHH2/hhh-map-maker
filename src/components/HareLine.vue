@@ -50,6 +50,9 @@ const reload = () => {
         text-align: center;
         margin-bottom: 16px;
       }
+      .hareline-item {
+        margin-bottom: 8px;
+      }
       .hareline-item, .hareline-header--latest {
         grid-template-columns: 71px 100px 280px !important;
         cursor: pointer;
