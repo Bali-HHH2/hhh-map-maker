@@ -82,6 +82,10 @@ const reload = () => {
     overflow-y: scroll;
     padding-right: 24px; /* Increase/decrease this value for cross-browser compatibility */
     box-sizing: content-box; /* So the width will be 100% + 17px */
+    @media screen and (max-width: 800px) {
+      width: fit-content;
+      margin: 0 auto;
+    }
   }
 
   .hareline-header {
