@@ -18,7 +18,7 @@ const formRunObject = (currentRun: string[], hareLine: Ref) => {
   const date = currentRun[1] || '?'
   const hares = currentRun[2] || '?'
   const googleMapsLink = currentRun[5] ? `https://www.google.com/maps/search/?api=1&query=${coordinates()?.[1]},${coordinates()?.[0]}` : '#'
-  const occasion = currentRun[3] || '?'
+  const occasion = currentRun[3]
   const runSiteName = currentRun[4] || 'Waiting on hares...'
   const startTime = currentRun[6] || '?'
   document.title = `BHHH2 Run #${number} - ${runSiteName}`
