@@ -47,7 +47,7 @@ const onAfterPrint = () => {
 
 onMounted(async () => {
   const loader = new Loader({
-    apiKey: "AIzaSyBu5XBrgLw5AE4dFw5hoYHdfc72-5T5lAk",
+    apiKey: import.meta.env.VITE_GOOGLEMAPS_API_KEY as string,
     version: "weekly",
   });
   if (!lat || !lng) return;
