@@ -21,6 +21,7 @@ const googleMap = ref()
 const showGoogleMap = ref(true)
 
 let map: google.maps.Map
+let canvas: HTMLCanvasElement
 const props = defineProps({
   mapCoords: Array,
 });
@@ -28,17 +29,20 @@ const { mapCoords } = toRefs(props);
 const lat = parseFloat(mapCoords?.value?.[1] as string)
 const lng = parseFloat(mapCoords?.value?.[0] as string)
 
-const copyMapDiv = async () => {
+const onBeforePrint = async () => {
   map.setOptions({disableDefaultUI:true});
   await delay(300)
-  const canvas = await html2canvas(mapContainer.value, {
+  canvas = await html2canvas(mapContainer.value, {
     backgroundColor: null,
     useCORS: true
   })
-      // .then(function (canvas) {
   mapContainer.value.appendChild(canvas);
   showGoogleMap.value = false
-  // });
+}
+
+const onAfterPrint = () => {
+  canvas.remove()
+  showGoogleMap.value = true
 }
 
 onMounted(async () => {
@@ -57,17 +61,18 @@ onMounted(async () => {
       map,
       icon: mapMarker2,
     });
+
     // Overwrite print function then call it after copying map div to image.
     const _print = window.print;
     window.print = async function() {
-      await copyMapDiv();
+      await onBeforePrint();
       // do stuff
       _print();
     }
 
+    // Remove the canvas and show the map again after printing.
     window.onafterprint = function() {
-      mapContainer.value.removeChild(mapContainer.value.lastChild);
-      showGoogleMap.value = true
+      onAfterPrint()
     }
     // Check if the print param is passed to the page.
     google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
