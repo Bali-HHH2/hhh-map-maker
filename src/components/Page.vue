@@ -69,8 +69,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import MapBoxMap from "./MapBoxMap.vue";
 import GoogleMap from "./GoogleMap.vue";
 import HareLine from "./HareLine.vue";
 
