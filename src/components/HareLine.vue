@@ -16,13 +16,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 
-defineProps<{
-  hareLine: any,
-  showingPreviousRuns: boolean,
-  onClickPreviousRun: (line: string[]) => null
-}>()
+interface Props {
+  hareLine?: string[]
+  showingPreviousRuns?: boolean
+  onClickPreviousRun?: Function
+}
+
+defineProps<Props>()
 
 const reload = () => {
   window.location.reload()

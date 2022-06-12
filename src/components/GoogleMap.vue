@@ -1,7 +1,7 @@
 <template>
-  <div class="map" v-if="mapCoords">
-    <img class="compass" src="../assets/compass.png" alt="Prost Compass">
-    <div id="map" class="map-container"></div>
+  <div class="map" ref="mapContainer" v-if="mapCoords">
+    <img v-show="showGoogleMap" class="compass" src="../assets/compass.png" alt="Prost Compass">
+    <div v-show="showGoogleMap" id="map" ref="googleMap" class="map-container"></div>
   </div>
   <div v-else class="map-container__no-map">
     <h3 v-if="!mapCoords">No map coordinates published yet...</h3>
@@ -10,17 +10,36 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, toRefs } from 'vue'
+import { onMounted, toRefs, ref } from 'vue'
 import { Loader } from "@googlemaps/js-api-loader"
-import mapMarker from '../assets/pin.png'
 import mapMarker2 from '../assets/pin2.png'
+import html2canvas from "html2canvas";
+import delay from "../utils/delay";
 
+const mapContainer = ref()
+const googleMap = ref()
+const showGoogleMap = ref(true)
+
+let map: google.maps.Map
 const props = defineProps({
   mapCoords: Array,
 });
 const { mapCoords } = toRefs(props);
-const lat = parseFloat(mapCoords.value?.[1])
-const lng = parseFloat(mapCoords.value?.[0])
+const lat = parseFloat(mapCoords?.value?.[1] as string)
+const lng = parseFloat(mapCoords?.value?.[0] as string)
+
+const copyMapDiv = async () => {
+  map.setOptions({disableDefaultUI:true});
+  await delay(300)
+  const canvas = await html2canvas(mapContainer.value, {
+    backgroundColor: null,
+    useCORS: true
+  })
+      // .then(function (canvas) {
+  mapContainer.value.appendChild(canvas);
+  showGoogleMap.value = false
+  // });
+}
 
 onMounted(async () => {
   const loader = new Loader({
@@ -29,7 +48,7 @@ onMounted(async () => {
   });
   if (!lat || !lng) return;
   loader.load().then(() => {
-    const map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
+    map = new google.maps.Map(googleMap.value, {
       center: { lat, lng },
       zoom: 15,
     });
@@ -38,10 +57,18 @@ onMounted(async () => {
       map,
       icon: mapMarker2,
     });
-    // Resize map before printing so it fits the page.
-    window.addEventListener('beforeprint', (event) => {
-      google.maps.event.trigger(map, 'resize');
-    });
+    // Overwrite print function then call it after copying map div to image.
+    const _print = window.print;
+    window.print = async function() {
+      await copyMapDiv();
+      // do stuff
+      _print();
+    }
+
+    window.onafterprint = function() {
+      mapContainer.value.removeChild(mapContainer.value.lastChild);
+      showGoogleMap.value = true
+    }
     // Check if the print param is passed to the page.
     google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
       if (window.location.href.includes('print')) {
@@ -50,6 +77,7 @@ onMounted(async () => {
     });
   })
 });
+
 </script>
 
 <style lang="scss">

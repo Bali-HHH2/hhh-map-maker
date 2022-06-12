@@ -32,8 +32,7 @@
         </div>
       </div>
       <div class="hares">Hares: {{currentRunInfo.hares}}</div>
-      <GoogleMap v-if="!willUseMapBox" :map-coords="currentRunInfo.coordinates"/>
-      <MapBoxMap v-else :map-coords="currentRunInfo.coordinates"/>
+      <GoogleMap :map-coords="currentRunInfo.coordinates"/>
       <div class="bottom-info">
         <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
           <div class="mismanagement">
@@ -98,11 +97,6 @@ defineProps<{ currentRunInfo: pageParameters }>()
 
 const currentYear = new Date().getFullYear()
 
-let willUseMapBox = ref(false);
-
-window.useMapBox = () => {
-  willUseMapBox.value = true
-}
 </script>
 
 <style lang="scss">
