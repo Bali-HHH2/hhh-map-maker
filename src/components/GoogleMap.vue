@@ -1,7 +1,7 @@
 <template>
   <div class="map" ref="mapContainer" v-if="mapCoords">
-    <img v-show="showGoogleMap" class="compass" src="../assets/compass.png" alt="Prost Compass">
-    <div v-show="showGoogleMap" id="map" ref="googleMap" class="map-container"></div>
+    <img class="compass" src="../assets/compass.png" alt="Prost Compass">
+    <div id="map" ref="googleMap" class="map-container"></div>
   </div>
   <div v-else class="map-container__no-map">
     <h3 v-if="!mapCoords">No map coordinates published yet...</h3>
@@ -13,37 +13,17 @@
 import { onMounted, toRefs, ref } from 'vue'
 import { Loader } from "@googlemaps/js-api-loader"
 import mapMarker2 from '../assets/pin2.png'
-import html2canvas from "html2canvas";
-import delay from "../utils/delay";
 
 const mapContainer = ref()
 const googleMap = ref()
-const showGoogleMap = ref(true)
 
 let map: google.maps.Map
-let canvas: HTMLCanvasElement
 const props = defineProps({
   mapCoords: Array,
 });
 const { mapCoords } = toRefs(props);
 const lat = parseFloat(mapCoords?.value?.[1] as string)
 const lng = parseFloat(mapCoords?.value?.[0] as string)
-
-const onBeforePrint = async () => {
-  map.setOptions({disableDefaultUI:true});
-  await delay(300)
-  canvas = await html2canvas(mapContainer.value, {
-    backgroundColor: null,
-    useCORS: true
-  })
-  mapContainer.value.appendChild(canvas);
-  showGoogleMap.value = false
-}
-
-const onAfterPrint = () => {
-  canvas.remove()
-  showGoogleMap.value = true
-}
 
 onMounted(async () => {
   const loader = new Loader({
@@ -61,19 +41,8 @@ onMounted(async () => {
       map,
       icon: mapMarker2,
     });
+    window.map = map
 
-    // Overwrite print function then call it after copying map div to image.
-    const _print = window.print;
-    window.print = async function() {
-      await onBeforePrint();
-      // do stuff
-      _print();
-    }
-
-    // Remove the canvas and show the map again after printing.
-    window.onafterprint = function() {
-      onAfterPrint()
-    }
     // Check if the print param is passed to the page.
     google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
       if (window.location.href.includes('print')) {

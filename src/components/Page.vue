@@ -1,6 +1,29 @@
 <template>
   <div class="A4-container">
-    <div class="A4">
+    <div v-show="isPrintMode" class="A4" ref="pageCanvas">
+    <!--
+      This div will contain a canvas that contains an image of the original interactive page below, it is only
+      shown when the print button or shortcut are pressed, we do this because the PDF creator tries to vectorize
+      the typewriter font we use and causes huge PDF file sizes. If we raster the whole div into an image first
+      with html2canvas and print that to PDF, it will skip vectorization of the font and result in ~700kb vs ~10mb.
+      These links aren't visible but are overlay links on top of the canvas so we can keep clickable links on the
+      raster image
+     -->
+      <a class="A4__gps-link"
+          v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
+         :href="currentRunInfo.googleMapsLink"
+         target="_blank"
+      >
+        {{currentRunInfo.coordinates[1]}}, {{currentRunInfo.coordinates[0]}}
+      </a>
+      <a class="A4__website-link"
+         href="http://balihash2.com/next-run-map"
+         target="_blank"
+      >
+        http://balihash2.com/next-run-map
+      </a>
+    </div>
+    <div v-if="!isPrintMode" class="A4" ref="realPage">
       <div class="title">
         <img src="../assets/logo.png" alt="">
         <div class="title__text">
@@ -48,16 +71,16 @@
             <a href="http://balihash2.com/next-run-map" target="_blank">http://balihash2.com/next-run-map</a>
             <div class="mismanagement__links">
               <a class="social-link" target="_blank" href="https://facebook.com/BaliHash2/">
-                <img src="https://www.facebook.com/favicon.ico" alt="">
+                <img src="../assets/fb.ico" alt="">
               </a>
               <a class="social-link" target="_blank" href="https://www.instagram.com/balihash.househarriers2/">
-                <img src="https://www.instagram.com/favicon.ico" alt="">
+                <img src="../assets/insta.ico" alt="">
               </a>
               <a class="social-link" target="_blank" href="https://twitter.com/BaliHash2">
-                <img src="https://abs.twimg.com/favicons/twitter.2.ico" alt="">
+                <img src="../assets/twitter.ico" alt="">
               </a>
               <a class="social-link" target="_blank" href="http://balihash2.com/subscribe-bali-hash-2/">
-                <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="">
+                <img src="../assets/gmail.ico" alt="">
               </a>
             </div>
           </div>
@@ -71,11 +94,15 @@
 <script setup lang="ts">
 import GoogleMap from "./GoogleMap.vue";
 import HareLine from "./HareLine.vue";
+import delay from "../utils/delay";
+import html2canvas from "html2canvas";
+import {ref} from "vue";
 
 declare global {
   interface Window {
     initMap: () => void;
     useMapBox: () => void;
+    map: unknown
   }
 }
 
@@ -94,6 +121,39 @@ interface pageParameters {
 defineProps<{ currentRunInfo: pageParameters }>()
 
 const currentYear = new Date().getFullYear()
+const pageCanvas = ref()
+const realPage = ref()
+const isPrintMode = ref(false)
+
+// Takes the interactive map, turns it into an image and displays it on ref="pageCanvas"
+const onBeforePrint = async () => {
+  window.map.setOptions({ disableDefaultUI:true }); // Hides the nav button on google map
+  await delay(500)
+  const canvas = await html2canvas(realPage.value, {
+    backgroundColor: null,
+    useCORS: true
+  })
+  pageCanvas.value.appendChild(canvas);
+  isPrintMode.value = true // This hides the original interactive page and shows the imaged version
+}
+
+const onAfterPrint = async () => {
+  window.map.setOptions({ disableDefaultUI:false });
+  isPrintMode.value = false
+}
+
+// Overwrite print function then call it after copying map div to image.
+const _print = window.print;
+window.print = async function() {
+  await onBeforePrint();
+  _print();
+}
+
+// Remove the canvas and show the map again after printing.
+window.onafterprint = function() {
+  onAfterPrint()
+}
+
 
 </script>
 
@@ -115,6 +175,23 @@ const currentYear = new Date().getFullYear()
   display: block;
   margin: 0 auto 0.5cm;
   box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  .A4__website-link, .A4__gps-link {
+    position: absolute;
+    font-size: 22px;
+    color: #ff000000;
+  }
+  .A4__gps-link {
+    right: 29px;
+    top: 111px;
+    width: 300px;
+    height: 36px;
+  }
+  .A4__website-link {
+    left: 43px;
+    bottom: 32px;
+    width: 300px;
+    height: 65px;
+  }
   @media screen and (max-width: 800px) {
     width: 100%;
     height: 100%;
