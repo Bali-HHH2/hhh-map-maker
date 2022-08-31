@@ -1,6 +1,6 @@
 <template>
   <div class="A4-container">
-    <div v-show="isPrintMode" class="A4" ref="pageCanvas">
+    <div v-show="isPrintMode" class="A4--canvas" ref="pageCanvas">
     <!--
       This div will contain a canvas that contains an image of the original interactive page below, it is only
       shown when the print button or shortcut are pressed, we do this because the PDF creator tries to vectorize
@@ -165,6 +165,10 @@ window.onafterprint = function() {
   @media screen and (max-width: 800px) {
     padding: 0;
   }
+}
+
+.A4--canvas {
+  @extend .A4;
 }
 
 .A4 {
