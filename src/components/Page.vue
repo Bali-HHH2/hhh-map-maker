@@ -51,7 +51,8 @@
             {{currentRunInfo.coordinates[1]}}, {{currentRunInfo.coordinates[0]}}
           </a>
           <span v-else>Waiting on hares...</span>
-          <h2 v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}} Run</h2>
+          <h2 class="run-occasion" v-if="currentRunInfo.occasion">{{currentRunInfo.occasion}} Run</h2>
+          <p class="run-remark">{{currentRunInfo.remark}}</p>
         </div>
       </div>
       <div class="hares">Hares: {{currentRunInfo.hares}}</div>
@@ -116,6 +117,7 @@ interface pageParameters {
   coordinates: string,
   filteredHareLine: string[],
   startTime: string,
+  remark: string,
 }
 
 defineProps<{ currentRunInfo: pageParameters }>()
@@ -298,6 +300,14 @@ hr {
     }
   }
   &__right {
+    h2.run-occasion {
+      margin: 8px 0 5px
+    }
+    p.run-remark {
+      margin: 0 0 8px;
+      text-decoration: underline;
+      color: #226f1c;
+    }
     text-align: right;
     .hairline-item {
       display: flex;

@@ -21,6 +21,7 @@ const formRunObject = (currentRun: string[], hareLine: Ref) => {
   const occasion = currentRun[3]
   const runSiteName = currentRun[4] || 'Waiting on hares...'
   const startTime = currentRun[6] || '?'
+  const remark = currentRun[7] || ''
   document.title = `BHHH2 Run #${number} - ${runSiteName}`
   return {
     number,
@@ -32,6 +33,7 @@ const formRunObject = (currentRun: string[], hareLine: Ref) => {
     coordinates: coordinates(),
     filteredHareLine: hareLine.value?.slice(1),
     startTime,
+    remark
   }
 }
 
