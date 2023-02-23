@@ -1,6 +1,8 @@
 <template>
   <button class="print-button" @click="print">Print Map</button>
-  <button class="past-map-button" @click="showPreviousRuns = !showPreviousRuns">View Past Maps</button>
+  <button class="past-map-button" @click="showPreviousRuns = !showPreviousRuns">
+    View Past Maps
+  </button>
   <HareLine
     v-if="showPreviousRuns"
     :hare-line="fullHairLine"
@@ -11,21 +13,20 @@
   <Page
     v-if="hairLine && !showPreviousRuns"
     :currentRunInfo="currentRunInfo"
+    :mismanagement="mismanagement"
   />
   <div class="loading" v-else>
-    <h1>
-      Loading...
-    </h1>
+    <h1>Loading...</h1>
   </div>
 </template>
 
 <script setup lang="ts">
 import Page from './components/Page.vue'
-import { onBeforeMount, ref } from "vue";
-import getHareLine from "./utils/getHareLine";
-import { subDays } from "date-fns";
-import { currentRun, formRunObject } from "./utils/currentRun";
-import HareLine from "./components/HareLine.vue";
+import { onBeforeMount, ref } from 'vue'
+import getHareLine from './utils/getHareLine'
+import { subDays } from 'date-fns'
+import { currentRun, formRunObject } from './utils/currentRun'
+import HareLine from './components/HareLine.vue'
 
 const print = () => window.print()
 
@@ -33,6 +34,7 @@ const fullHairLine = ref()
 const hairLine = ref()
 const showPreviousRuns = ref()
 const currentRunInfo = ref()
+const mismanagement = ref()
 
 const onClickPreviousRun = (run: string[]) => {
   if (!showPreviousRuns.value) return
@@ -42,22 +44,28 @@ const onClickPreviousRun = (run: string[]) => {
 
 onBeforeMount(async () => {
   const unfilteredHareLine = await getHareLine()
-  fullHairLine.value = unfilteredHareLine.filter((e: string[]) =>
+  // Mismanagement is on 1F on the hareline sheet
+  mismanagement.value = unfilteredHareLine?.[0]?.[5] || undefined
+  fullHairLine.value = unfilteredHareLine.filter(
+    (e: string[]) =>
       // First items needs to be a run number, and the rest need to be present to be a valid run.
-    parseInt(e[0]) && e[1] && e[2] && e[3] && e[5]
+      parseInt(e[0]) && e[1] && e[2] && e[3] && e[5]
   )
-  hairLine.value = unfilteredHareLine.filter((value: string[]) =>
+  hairLine.value = unfilteredHareLine.filter(
+    (value: string[]) =>
       parseInt(value[0]) > 1500 &&
       value[2] &&
-      new Date(value?.[1]) >= subDays(new Date(), 1))
-  currentRunInfo.value = currentRun(hairLine)
+      new Date(value?.[1]) >= subDays(new Date(), 1)
+  )
+  currentRunInfo.value = currentRun(hairLine, mismanagement)
 })
 </script>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -72,7 +80,8 @@ html, body {
   .loading {
     text-align: center;
   }
-  .print-button, .past-map-button {
+  .print-button,
+  .past-map-button {
     position: fixed;
     bottom: 0;
     left: 0;

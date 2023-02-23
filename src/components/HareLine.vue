@@ -1,22 +1,29 @@
 <template>
   <div class="hareline" :class="{ 'hareline--previous': showingPreviousRuns }">
     <div class="hareline-container">
-      <div class="hareline-header" v-if="!showingPreviousRuns">Receding Hareline</div>
+      <div class="hareline-header" v-if="!showingPreviousRuns">
+        Receding Hareline
+      </div>
       <div v-else>
         <div class="hareline-header">Previous Runs</div>
-        <div class="hareline-header--latest" @click="reload()">Show Latest Run ⏱</div>
+        <div class="hareline-header--latest" @click="reload()">
+          Show Latest Run ⏱
+        </div>
       </div>
-      <div class="hareline-item" v-for="line in hareLine" @click="onClickPreviousRun?.(line)">
-        <div class="hareline-item__number">#{{line[0]}}</div>
-        <div class="hareline-item__date">{{line[1]}}</div>
-        <div class="hareline-item__hare">{{line[2]}}</div>
+      <div
+        class="hareline-item"
+        v-for="line in hareLine"
+        @click="onClickPreviousRun?.(line)"
+      >
+        <div class="hareline-item__number">#{{ line[0] }}</div>
+        <div class="hareline-item__date">{{ line[1] }}</div>
+        <div class="hareline-item__hare">{{ line[2] }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 interface Props {
   hareLine?: string[]
   showingPreviousRuns?: boolean
@@ -43,7 +50,7 @@ const reload = () => {
     height: 29.7cm;
     display: block;
     margin: 30px auto 0.5cm;
-    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
     .hareline-container {
       width: 60% !important;
       margin: 50px auto 0 !important;
@@ -54,7 +61,8 @@ const reload = () => {
       .hareline-item {
         margin-bottom: 8px;
       }
-      .hareline-item, .hareline-header--latest {
+      .hareline-item,
+      .hareline-header--latest {
         grid-template-columns: 71px 100px 280px !important;
         cursor: pointer;
         &:hover {
@@ -101,7 +109,7 @@ const reload = () => {
     grid-template-columns: 50px 100px 215px;
     grid-template-rows: 1fr;
     gap: 8px;
-    grid-template-areas: ". . .";
+    grid-template-areas: '. . .';
     margin-bottom: 4px;
   }
 }

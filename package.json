@@ -6,7 +6,8 @@
     "dev": "vite",
     "build-ts": "vue-tsc --noEmit && vite build",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "prettier src --write"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.14.0",
@@ -20,6 +21,7 @@
     "@types/mapbox-gl": "^2.6.3",
     "@vitejs/plugin-vue": "^2.2.0",
     "pnpm": "^7.9.5",
+    "prettier": "^2.8.4",
     "sass": "^1.49.9",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
