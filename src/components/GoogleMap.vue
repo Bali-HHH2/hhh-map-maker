@@ -47,6 +47,8 @@ onMounted(async () => {
     google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
       if (window.location.href.includes('print')) {
         window.print()
+      } else if (window.location.href.includes('screenshot')) {
+        window.map.setOptions({ disableDefaultUI: true })
       }
     })
   })
