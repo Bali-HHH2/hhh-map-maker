@@ -3,7 +3,7 @@ import { Ref } from 'vue'
 // @ts-ignore
 import convert from 'geo-coordinates-parser'
 
-const currentRun = (hareLine: Ref, mismanagement: string | undefined) => {
+const currentRun = (hareLine: Ref) => {
   const currentRun = hareLine.value.find((e: string[]) =>
     isInCurrentWeek(new Date(e?.[1]))
   )

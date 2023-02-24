@@ -57,7 +57,7 @@ onBeforeMount(async () => {
       value[2] &&
       new Date(value?.[1]) >= subDays(new Date(), 1)
   )
-  currentRunInfo.value = currentRun(hairLine, mismanagement)
+  currentRunInfo.value = currentRun(hairLine)
 })
 </script>
 
