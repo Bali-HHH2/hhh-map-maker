@@ -3,6 +3,19 @@ import { Ref } from 'vue'
 // @ts-ignore
 import convert from 'geo-coordinates-parser'
 
+export interface ICurrentRun {
+  number: string
+  date: string
+  hares: string
+  googleMapsLink: string
+  occasion: string
+  runSiteName: string
+  coordinates: any
+  filteredHareLine: string[]
+  startTime: string
+  remark: string
+}
+
 const currentRun = (hareLine: Ref) => {
   const currentRun = hareLine.value.find((e: string[]) =>
     isInCurrentWeek(new Date(e?.[1]))
@@ -10,7 +23,7 @@ const currentRun = (hareLine: Ref) => {
   return formRunObject(currentRun, hareLine)
 }
 
-const formRunObject = (currentRun: string[], hareLine: Ref) => {
+const formRunObject = (currentRun: string[], hareLine: Ref): ICurrentRun => {
   const coordinates = () => {
     if (!currentRun[5]) return null
     const converted = convert(currentRun[5])

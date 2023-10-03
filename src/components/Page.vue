@@ -50,6 +50,7 @@
           GPS:
           <a
             v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
+            class="gps-link"
             :href="currentRunInfo.googleMapsLink"
             target="_blank"
           >
@@ -426,7 +427,8 @@ hr {
     height: 15.5cm !important;
   }
   .print-button,
-  .past-map-button {
+  .past-map-button,
+  .copy-details-button {
     display: none;
   }
 }
