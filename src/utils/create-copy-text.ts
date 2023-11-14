@@ -10,10 +10,10 @@ const copyRunDetailsToClipboard = async (runInfo: ICurrentRun) => {
     Occasion: ${runInfo.occasion}
     Coordinates: ${runInfo.coordinates.join(' ')}
     Google maps: ${runInfo.googleMapsLink}
-    ${runInfo.remark}`
+    ${runInfo.remark}`.trim()
 
   try {
-    await navigator.clipboard.writeText(runInfoString)
+    await navigator.clipboard.writeText(dontIndent(runInfoString))
     console.log('Content copied to clipboard')
   } catch (err) {
     console.error('Failed to copy: ', err)
@@ -21,3 +21,7 @@ const copyRunDetailsToClipboard = async (runInfo: ICurrentRun) => {
 }
 
 export default copyRunDetailsToClipboard
+
+function dontIndent(str: string) {
+  return ('' + str).replace(/(\n)\s+/g, '$1')
+}
