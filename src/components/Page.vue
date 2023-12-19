@@ -26,13 +26,7 @@
       </a>
     </div>
     <div v-if="!isPrintMode" class="A4" ref="realPage">
-      <div class="title">
-        <img src="../assets/logo.png" alt="" />
-        <div class="title__text">
-          <p>Bali Hash House Harriers 2</p>
-          <p>Next Run Map</p>
-        </div>
-      </div>
+      <Title> Next Run Map </Title>
       <hr />
       <div class="main-info">
         <div class="main-info__left">
@@ -126,14 +120,7 @@ import HareLine from './HareLine.vue'
 import delay from '../utils/delay'
 import html2canvas from 'html2canvas'
 import { ref } from 'vue'
-
-declare global {
-  interface Window {
-    initMap: () => void
-    useMapBox: () => void
-    map: unknown
-  }
-}
+import Title from './Title.vue'
 
 interface pageParameters {
   number: string
@@ -244,23 +231,6 @@ window.onafterprint = function () {
     .run-time--nonstandard {
       font-size: 18px !important;
     }
-    .title {
-      img {
-        position: unset;
-        margin-left: 18px;
-        margin-right: 18px;
-        margin-top: 16px;
-      }
-      &__text {
-        margin-top: 38px;
-        p {
-          margin: 0;
-          font-size: 4.5vw;
-          text-align: left;
-          line-height: 1em;
-        }
-      }
-    }
     .bottom-info {
       display: flex;
       flex-direction: column-reverse;
@@ -276,7 +246,6 @@ window.onafterprint = function () {
   }
 }
 
-.title,
 .main-info,
 .bottom-info,
 .hares {
@@ -289,28 +258,6 @@ window.onafterprint = function () {
   font-size: 20px;
   text-align: left;
   margin: 0 40px;
-}
-
-.title {
-  display: flex;
-  height: 100px;
-  overflow: hidden;
-  img {
-    height: 92px;
-    position: absolute;
-    left: 39px;
-    top: 12px;
-  }
-  &__text {
-    position: absolute;
-    left: 148px;
-    top: 0;
-    p {
-      font-size: 42px;
-      text-align: left;
-      line-height: 0;
-    }
-  }
 }
 
 hr {
@@ -335,6 +282,7 @@ hr {
     }
   }
   &__right {
+    z-index: 10;
     h2.run-occasion {
       margin: 8px 0 5px;
     }
@@ -425,11 +373,6 @@ hr {
   .map,
   .map-container {
     height: 15.5cm !important;
-  }
-  .print-button,
-  .past-map-button,
-  .copy-details-button {
-    display: none;
   }
 }
 </style>

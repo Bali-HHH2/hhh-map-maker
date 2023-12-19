@@ -3,7 +3,11 @@
   <button class="past-map-button" @click="showPreviousRuns = !showPreviousRuns">
     View Past Maps
   </button>
-  <button ref="copyDetailsButton" class="copy-details-button" @click="onCopyToClipboard">
+  <button
+    ref="copyDetailsButton"
+    class="copy-details-button"
+    @click="onCopyToClipboard"
+  >
     Copy Run Info
   </button>
   <HareLine
@@ -13,6 +17,7 @@
     :on-click-previous-run="onClickPreviousRun"
     @close="showPreviousRuns = false"
   />
+<!--  <BlankPage />-->
   <Page
     v-if="hairLine && !showPreviousRuns"
     :currentRunInfo="currentRunInfo"
@@ -31,9 +36,10 @@ import { subDays } from 'date-fns'
 import { currentRun, formRunObject } from './utils/currentRun'
 import HareLine from './components/HareLine.vue'
 import copyRunDetailsToClipboard from './utils/create-copy-text'
-import delay from "./utils/delay";
+import delay from './utils/delay'
+// import BlankPage from './components/BlankPage.vue'
 
-const print = () => window.print()
+// Data
 
 const fullHairLine = ref()
 const hairLine = ref()
@@ -41,6 +47,10 @@ const showPreviousRuns = ref()
 const currentRunInfo = ref()
 const mismanagement = ref()
 const copyDetailsButton = ref()
+
+// Methods
+
+const print = () => window.print()
 
 const onClickPreviousRun = (run: string[]) => {
   if (!showPreviousRuns.value) return
@@ -54,6 +64,8 @@ const onCopyToClipboard = async () => {
   await delay(1000)
   copyDetailsButton.value.style.backgroundColor = 'unset'
 }
+
+// Hooks
 
 onBeforeMount(async () => {
   const unfilteredHareLine = await getHareLine()
@@ -119,6 +131,18 @@ body {
     @media screen and (max-width: 800px) {
       display: none;
     }
+  }
+}
+@media print {
+  body {
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .print-button,
+  .past-map-button,
+  .copy-details-button {
+    display: none;
   }
 }
 </style>

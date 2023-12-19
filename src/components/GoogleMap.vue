@@ -14,8 +14,7 @@ import { onMounted, toRefs, ref } from 'vue'
 import { Loader } from '@googlemaps/js-api-loader'
 import mapMarker2 from '../assets/pin2.png'
 
-const mapContainer = ref()
-const googleMap = ref()
+// Vars
 
 let map: google.maps.Map
 const props = defineProps({
@@ -24,6 +23,14 @@ const props = defineProps({
 const { mapCoords } = toRefs(props)
 const lat = parseFloat(mapCoords?.value?.[1] as string)
 const lng = parseFloat(mapCoords?.value?.[0] as string)
+
+// Data
+
+const mapContainer = ref()
+const googleMap = ref()
+
+
+// Hooks
 
 onMounted(async () => {
   const loader = new Loader({
