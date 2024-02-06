@@ -1,5 +1,5 @@
 <template>
-  <div class="map" ref="mapContainer" v-if="mapCoords">
+  <div class="map" ref="mapContainer" v-if="mapCoords" @click="openMapInNewTab">
     <img class="compass" src="../assets/compass.png" alt="Prost Compass" />
     <div id="map" ref="googleMap" class="map-container"></div>
   </div>
@@ -29,6 +29,11 @@ const lng = parseFloat(mapCoords?.value?.[0] as string)
 const mapContainer = ref()
 const googleMap = ref()
 
+// Methods
+
+const openMapInNewTab = () => {
+  window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`)
+}
 
 // Hooks
 
