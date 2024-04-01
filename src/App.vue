@@ -37,7 +37,6 @@ import { currentRun, formRunObject } from './utils/currentRun'
 import HareLine from './components/HareLine.vue'
 import copyRunDetailsToClipboard from './utils/create-copy-text'
 import delay from './utils/delay'
-// import BlankPage from './components/BlankPage.vue'
 
 // Data
 

@@ -1,6 +1,11 @@
 <template>
   <div class="A4-container">
-    <div v-show="isPrintMode" class="A4--canvas" ref="pageCanvas">
+    <div
+      v-show="isPrintMode"
+      class="A4--canvas"
+      :class="{ 'print-layout': usePrintCss }"
+      ref="pageCanvas"
+    >
       <!--
       This div will contain a canvas that contains an image of the original interactive page below, it is only
       shown when the print button or shortcut are pressed, we do this because the PDF creator tries to vectorize
@@ -25,7 +30,12 @@
         http://balihash2.com/next-run-map
       </a>
     </div>
-    <div v-if="!isPrintMode" class="A4" ref="realPage">
+    <div
+      v-if="!isPrintMode"
+      class="A4"
+      :class="{ 'print-layout': usePrintCss }"
+      ref="realPage"
+    >
       <Title> Next Run Map </Title>
       <hr />
       <div class="main-info">
@@ -136,29 +146,42 @@ interface pageParameters {
   mismanagement: string
 }
 
+// Props
+
 defineProps<{
   currentRunInfo: pageParameters
   mismanagement: string | undefined
 }>()
 
+// Data
+
 const currentYear = new Date().getFullYear()
 const pageCanvas = ref()
 const realPage = ref()
+const canvasRef = ref()
+const usePrintCss = ref(false)
 const isPrintMode = ref(false)
 
-// Takes the interactive map, turns it into an image and displays it on ref="pageCanvas"
+// Methods
+
 const onBeforePrint = async () => {
+  // Takes the interactive map, turns it into an image and displays it on ref="pageCanvas"
+  usePrintCss.value = true
   window.map.setOptions({ disableDefaultUI: true }) // Hides the nav button on google map
   await delay(500)
-  const canvas = await html2canvas(realPage.value, {
+  canvasRef.value = await html2canvas(realPage.value, {
     backgroundColor: null,
     useCORS: true
   })
-  pageCanvas.value.appendChild(canvas)
+  pageCanvas.value.appendChild(canvasRef.value)
   isPrintMode.value = true // This hides the original interactive page and shows the imaged version
 }
 
 const onAfterPrint = async () => {
+  // Remove the canvas after printing.
+  usePrintCss.value = false
+  canvasRef.value.remove()
+  canvasRef.value = null
   window.map.setOptions({ disableDefaultUI: false })
   isPrintMode.value = false
 }
@@ -221,7 +244,6 @@ window.onafterprint = function () {
     width: 300px;
     height: 65px;
   }
-
 
   @include mobile {
     width: 100%;
@@ -294,7 +316,6 @@ hr {
       font-size: 24px;
       color: red;
     }
-
   }
   &__right {
     z-index: 10;
@@ -395,11 +416,34 @@ hr {
   }
 }
 
+.print-layout {
+  margin: 0;
+  box-shadow: none;
+
+  position: relative;
+  background: white;
+  width: 21cm;
+  height: 29.7cm;
+  display: block;
+  overflow: visible;
+  .bottom-info {
+    display: grid;
+  }
+}
+
 @media print {
   body,
-  .A4 {
+  .A4,
+  .A4--canvas {
     margin: 0;
     box-shadow: none;
+
+    position: relative;
+    background: white;
+    width: 21cm;
+    height: 29.7cm;
+    display: block;
+    overflow: visible;
   }
 
   .A4-container {

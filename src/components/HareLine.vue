@@ -25,11 +25,15 @@
 
 <script setup lang="ts">
 
+// Props
+
 defineProps<{
   hareLine?: string[]
   showingPreviousRuns?: boolean
   onClickPreviousRun?: (line: string) => void
 }>()
+
+// Methods
 
 const reload = () => {
   window.location.reload()
