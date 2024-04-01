@@ -177,11 +177,13 @@ window.onafterprint = function () {
 </script>
 
 <style lang="scss">
+@import '../style/Global.module.scss';
+
 .A4-container {
   width: 100%;
   padding-bottom: 30px;
   padding-top: 30px;
-  @media screen and (max-width: 800px) {
+  @include mobile {
     padding: 0;
   }
 }
@@ -198,25 +200,30 @@ window.onafterprint = function () {
   display: block;
   margin: 0 auto 0.5cm;
   box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+
   .A4__website-link,
   .A4__gps-link {
     position: absolute;
     font-size: 22px;
     color: #ff000000;
   }
+
   .A4__gps-link {
     right: 29px;
     top: 111px;
     width: 300px;
     height: 36px;
   }
+
   .A4__website-link {
     left: 43px;
     bottom: 32px;
     width: 300px;
     height: 65px;
   }
-  @media screen and (max-width: 800px) {
+
+
+  @include mobile {
     width: 100%;
     height: 100%;
     padding-bottom: 20px;
@@ -225,21 +232,26 @@ window.onafterprint = function () {
       font-size: unset;
       margin: 0 18px;
     }
+
     .compass {
       height: 160px;
     }
+
     .run-time--nonstandard {
       font-size: 18px !important;
     }
+
     .bottom-info {
       display: flex;
       flex-direction: column-reverse;
     }
+
     .hairline-container {
       margin: 0 auto;
       max-width: 400px;
       padding: 0 18px !important;
     }
+
     .mismanagement {
       width: unset !important;
     }
@@ -274,24 +286,30 @@ hr {
   grid-template-areas: '. .';
   margin: 0 40px;
   font-size: 20px;
+
   &__left {
     text-align: left;
+
     .run-time--nonstandard {
       font-size: 24px;
       color: red;
     }
+
   }
   &__right {
     z-index: 10;
+    text-align: right;
+
     h2.run-occasion {
       margin: 8px 0 5px;
     }
+
     p.run-remark {
       margin: 0 0 8px;
       text-decoration: underline;
       color: #226f1c;
     }
-    text-align: right;
+
     .hairline-item {
       display: flex;
       margin-bottom: 4px;
@@ -303,27 +321,41 @@ hr {
   margin-top: 16px;
   margin-right: 0;
   margin-left: 0;
+
   &__left {
     .mismanagement {
       text-align: center;
       font-size: 14px;
       margin: 0 16px 0 24px;
       width: 350px;
+
+      @include mobile {
+        margin-top: 8px;
+      }
+
+      p {
+        margin: 0 0 8px;
+      }
+
       &__links {
         display: flex;
         justify-content: center;
-        margin-top: 16px;
+        margin-top: 6px;
+
         .social-link {
           display: flex;
           align-items: center;
           justify-content: flex-start;
+
           img {
             margin-right: 8px;
             height: 24px;
           }
         }
+
         a {
           margin-right: 8px;
+
           img {
             height: 24px;
           }
@@ -331,11 +363,13 @@ hr {
       }
     }
   }
+
   &__right {
     font-size: 16px;
     text-align: left;
     height: 225px;
     overflow: hidden;
+
     .hairline-container {
       width: 100%;
       height: 100%;
@@ -367,9 +401,11 @@ hr {
     margin: 0;
     box-shadow: none;
   }
+
   .A4-container {
     padding: 0 !important;
   }
+
   .map,
   .map-container {
     height: 15.5cm !important;

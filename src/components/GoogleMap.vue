@@ -70,6 +70,7 @@ onMounted(async () => {
 <style lang="scss">
 .map {
   position: relative;
+
   .compass {
     position: absolute;
     height: 160px;
@@ -80,6 +81,7 @@ onMounted(async () => {
     filter: drop-shadow(0px 0px 2px #fff);
   }
 }
+
 .map-container,
 .map-container__no-map {
   width: 100%;

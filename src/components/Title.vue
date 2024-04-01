@@ -11,6 +11,8 @@
 <script setup lang="ts"></script>
 
 <style scoped lang="scss">
+@import '../style/Global.module.scss';
+
 .title {
   display: flex;
   height: 100px;
@@ -18,12 +20,14 @@
   font-family: 'Special Elite', cursive;
   font-weight: 600;
   color: #0ca501;
+
   img {
     height: 92px;
     position: absolute;
     left: 39px;
     top: 12px;
   }
+
   &__text {
     position: absolute;
     left: 148px;
@@ -36,17 +40,20 @@
   }
 }
 
-@media screen and (max-width: 800px) {
+@include mobile {
   .title {
+
     img {
       position: unset;
       margin-left: 18px;
       margin-right: 18px;
       margin-top: 16px;
     }
+
     &__text {
       margin-top: 38px;
       left: 120px;
+
       p {
         margin: 0;
         font-size: 4.5vw;

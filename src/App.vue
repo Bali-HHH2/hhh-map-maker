@@ -88,6 +88,7 @@ onBeforeMount(async () => {
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+@import './style/Global.module.scss';
 
 html,
 body {
@@ -102,9 +103,11 @@ body {
   text-align: center;
   color: #fff;
   height: 100%;
+
   .loading {
     text-align: center;
   }
+
   .print-button,
   .past-map-button,
   .copy-details-button {
@@ -120,19 +123,22 @@ body {
     z-index: 100;
     margin: 10px;
   }
+
   .past-map-button {
     right: 0;
     left: unset;
     width: auto;
   }
+
   .copy-details-button {
     bottom: unset;
     top: 0;
-    @media screen and (max-width: 800px) {
+    @include mobile {
       display: none;
     }
   }
 }
+
 @media print {
   body {
     margin: 0;

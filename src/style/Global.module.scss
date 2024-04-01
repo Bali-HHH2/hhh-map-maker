@@ -1,0 +1,11 @@
+$mobile_width: 800px;
+
+@mixin mobile {
+    @media screen and (max-width: $mobile_width) {
+        @content;
+    }
+}
+
+:export {
+    mobileWidth: $mobile_width
+}

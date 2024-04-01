@@ -64,11 +64,14 @@ window.onafterprint = function () {
 </script>
 
 <style scoped lang="scss">
+@import '../style/Global.module.scss';
+
 .A4-container {
   width: 100%;
   padding-bottom: 30px;
   padding-top: 30px;
-  @media screen and (max-width: 800px) {
+
+  @include mobile {
     padding: 0;
   }
 }
@@ -89,7 +92,7 @@ window.onafterprint = function () {
     width: 90%;
     border-top: 2px solid #0ca501;
   }
-  @media screen and (max-width: 800px) {
+  @include mobile {
     width: 100%;
     height: 100%;
     padding-bottom: 20px;
