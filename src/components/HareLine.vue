@@ -60,12 +60,12 @@ const reload = () => {
     height: 29.7cm;
     display: block;
     margin: 30px auto 0.5cm;
+    padding-bottom: 3cm;
     box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
 
     @include mobile {
       width: 100%;
       height: 100%;
-      padding-bottom: 20px;
       font-size: unset;
       .hareline-container {
         width: 90% !important;
