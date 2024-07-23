@@ -5,15 +5,31 @@
       <p>Bali Hash House Harriers 2</p>
       <p><slot></slot></p>
     </div>
+    <div class="fees">
+      <div>
+        Members:<br>100k
+      </div>
+      <div>
+        Visitors:<br>200k
+      </div>
+      <div>
+        Local Vis:<br>120k
+      </div>
+      <div>
+        Kids/non drink:<br>40k
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <style scoped lang="scss">
 @import '../style/Global.module.scss';
 
 .title {
+  position: relative;
   display: flex;
   height: 100px;
   overflow: hidden;
@@ -37,6 +53,15 @@
       text-align: left;
       line-height: 0;
     }
+  }
+  .fees {
+    font-size: 14.5px;
+    display: flex;
+    justify-content: start;
+    position: absolute;
+    left: 358px;
+    top: 69px;
+    gap: 16px;
   }
 }
 

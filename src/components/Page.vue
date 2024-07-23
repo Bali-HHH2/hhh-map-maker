@@ -36,7 +36,7 @@
       :class="{ 'print-layout': usePrintCss }"
       ref="realPage"
     >
-      <Title> Next Run Map </Title>
+      <Title> Next Run</Title>
       <hr />
       <div class="main-info">
         <div class="main-info__left">
