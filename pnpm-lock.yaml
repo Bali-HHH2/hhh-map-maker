@@ -15,8 +15,8 @@ importers:
         specifier: ^2.29.3
         version: 2.29.3
       geo-coordinates-parser:
-        specifier: ^1.5.8
-        version: 1.5.8
+        specifier: ^1.7.3
+        version: 1.7.3
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
@@ -32,7 +32,7 @@ importers:
         version: 2.7.10
       '@vitejs/plugin-vue':
         specifier: ^2.3.4
-        version: 2.3.4(vite@2.9.15)(vue@3.2.47)
+        version: 2.3.4(vite@2.9.15(sass@1.58.3))(vue@3.2.47)
       pnpm:
         specifier: ^7.27.1
         version: 7.27.1
@@ -416,8 +416,8 @@ packages:
   function-bind@1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==}
 
-  geo-coordinates-parser@1.5.8:
-    resolution: {integrity: sha512-CNTCPSmtbQq9PacGnhW7lHnhvVMMhtF0WhAGwEfD03OsKcNO0WcloH9Znzze/Rzdw+LSMp+y38FhQmC6OJCFqw==}
+  geo-coordinates-parser@1.7.3:
+    resolution: {integrity: sha512-zrMUPAVXAZRhEF2VFQEl9mR0yK9BZ+/n0G79uBHVg8XTsm7Ci0L2zGgW+p+h/Sq/8i6X3WSVfpp4t8n9kepXqg==}
 
   get-intrinsic@1.2.0:
     resolution: {integrity: sha512-L049y6nFOuom5wGyRc3/gdTLO94dySVKRACj1RmJZBQXlbTMhtNIgkWkUHq+jYmZvKf14EW1EoJnnjbmoHij0Q==}
@@ -817,7 +817,7 @@ snapshots:
     dependencies:
       '@types/geojson': 7946.0.10
 
-  '@vitejs/plugin-vue@2.3.4(vite@2.9.15)(vue@3.2.47)':
+  '@vitejs/plugin-vue@2.3.4(vite@2.9.15(sass@1.58.3))(vue@3.2.47)':
     dependencies:
       vite: 2.9.15(sass@1.58.3)
       vue: 3.2.47
@@ -1136,7 +1136,7 @@ snapshots:
 
   function-bind@1.1.1: {}
 
-  geo-coordinates-parser@1.5.8: {}
+  geo-coordinates-parser@1.7.3: {}
 
   get-intrinsic@1.2.0:
     dependencies:
@@ -1424,9 +1424,9 @@ snapshots:
       postcss: 8.4.21
       resolve: 1.22.1
       rollup: 2.77.3
-      sass: 1.58.3
     optionalDependencies:
       fsevents: 2.3.2
+      sass: 1.58.3
 
   void-elements@3.1.0: {}
 

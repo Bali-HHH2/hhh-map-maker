@@ -1,7 +1,7 @@
 import isInCurrentWeek from './isInCurrentWeek'
 import { Ref } from 'vue'
 // @ts-ignore
-import convert from 'geo-coordinates-parser'
+import { convert } from 'geo-coordinates-parser'
 
 export interface ICurrentRun {
   number: string
