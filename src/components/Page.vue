@@ -174,7 +174,7 @@ const onBeforePrint = async () => {
     useCORS: true
   })
   pageCanvas.value.appendChild(canvasRef.value)
-  isPrintMode.value = true // This hides the original interactive page and shows the imaged version
+  isPrintMode.value = false // This hides the original interactive page and shows the imaged version
 }
 
 const onAfterPrint = async () => {

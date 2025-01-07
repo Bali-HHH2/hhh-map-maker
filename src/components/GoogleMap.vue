@@ -68,6 +68,8 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
+@import '../style/Global.module.scss';
+
 .map {
   position: relative;
 
@@ -102,5 +104,9 @@ onMounted(async () => {
   img {
     filter: blur(9px);
   }
+}
+
+@include mobile {
+
 }
 </style>

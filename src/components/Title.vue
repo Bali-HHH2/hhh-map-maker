@@ -86,6 +86,17 @@
         line-height: 1em;
       }
     }
+
+    .fees {
+      font-size: 10.5px;
+      display: flex;
+      justify-content: start;
+      position: absolute;
+      left: 120px;
+      top: 80px;
+      gap: 16px;
+    }
   }
+
 }
 </style>
