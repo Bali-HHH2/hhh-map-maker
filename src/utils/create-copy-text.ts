@@ -2,6 +2,7 @@ import { ICurrentRun } from './currentRun'
 
 const copyRunDetailsToClipboard = async (runInfo: ICurrentRun) => {
   const runInfoString = `
+    Map: https://map.balihash2.com/
     Run: ${runInfo.number}
     Date: ${runInfo.date}
     Start Time: ${runInfo.startTime}!!!
