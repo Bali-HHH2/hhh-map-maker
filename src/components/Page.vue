@@ -43,10 +43,10 @@
           <div>Run: #{{ currentRunInfo.number }}</div>
           <div>Date: {{ currentRunInfo.date }}</div>
           <div v-if="currentRunInfo.startTime.match('4:30')">
-            Start Time: {{ currentRunInfo.startTime }}
+            Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
           </div>
           <div class="run-time--nonstandard" v-else>
-            Start Time: {{ currentRunInfo.startTime }}!!
+            Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
           </div>
           <div>Location: {{ currentRunInfo.runSiteName }}</div>
         </div>
