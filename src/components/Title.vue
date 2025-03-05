@@ -10,13 +10,13 @@
         Members:<br>100k
       </div>
       <div>
-        Visitors:<br>200k
+        Visitors:<br>150k
       </div>
+<!--      <div>-->
+<!--        Local Vis:<br>120k-->
+<!--      </div>-->
       <div>
-        Local Vis:<br>120k
-      </div>
-      <div>
-        Kids/non drink:<br>40k
+        Non drinkers/Kids:<br>50k
       </div>
     </div>
   </div>
