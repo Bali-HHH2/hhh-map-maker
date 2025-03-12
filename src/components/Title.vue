@@ -13,7 +13,10 @@
         Visitors:<br>120k
       </div>
       <div>
-        Non drinkers/Kids:<br>40k
+        Non drinkers:<br>50k
+      </div>
+      <div>
+        Kids:<br>10k
       </div>
     </div>
   </div>
