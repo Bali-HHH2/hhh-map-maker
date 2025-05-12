@@ -63,7 +63,7 @@
           </a>
           <span v-else>Waiting on hares...</span>
           <h2 class="run-occasion" v-if="currentRunInfo.occasion">
-            {{ currentRunInfo.occasion }} Run
+            {{ currentRunInfo.occasion }}
           </h2>
           <p class="run-remark">{{ currentRunInfo.remark }}</p>
         </div>
