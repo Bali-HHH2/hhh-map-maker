@@ -74,14 +74,7 @@
         <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
           <div class="mismanagement">
             <p>{{ currentYear }} Mismanagement</p>
-            <p v-if="!mismanagement">
-              Grand Master: Nightjar | Hash Master: Serial Offender | On Sec:
-              69’er | RA: Wooden Eye | Hash Cash: Toilet Trasher & Harelip |
-              Backup Hash Cash: Ringtail | Hash Bank: Pain & Pleasure | Hare
-              Raiser: Barnacle Balls | Beer Master: Short Shaft Hash Maps:
-              Balderdash | Hashberdashery: No Deposit
-            </p>
-            <p v-else>{{ mismanagement }}</p>
+            <p v-if="mismanagement">{{ mismanagement }}</p>
             <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
             <a href="http://balihash2.com/next-run-map" target="_blank"
               >http://balihash2.com/next-run-map</a
