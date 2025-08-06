@@ -10,7 +10,7 @@
         Members:<br>100k
       </div>
       <div>
-        Visitors:<br>120k
+        Visitors:<br>150k
       </div>
       <div>
         Non drinkers:<br>50k
