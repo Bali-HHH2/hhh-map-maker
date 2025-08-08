@@ -12,7 +12,7 @@
   </button>
   <button
     class="member-login"
-    @click="window.open('https://members.balihash2.com/applogin.asp')"
+    @click="openMembersPage"
   >
     Members login
   </button>
@@ -68,6 +68,14 @@ const onCopyToClipboard = async () => {
   copyDetailsButton.value.style.backgroundColor = 'green'
   await delay(1000)
   copyDetailsButton.value.style.backgroundColor = 'unset'
+}
+
+const openMembersPage = () => {
+  Object.assign(document.createElement('a'), {
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    href: 'https://members.balihash2.com/applogin.asp',
+  }).click();
 }
 
 // Hooks
