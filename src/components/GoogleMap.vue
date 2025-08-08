@@ -58,7 +58,10 @@ onMounted(async () => {
     // Check if the print param is passed to the page.
     google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
       if (window.location.href.includes('print')) {
-        window.print()
+        const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+        if (!isFirefox) {
+          window.print()
+        }
       } else if (window.location.href.includes('screenshot')) {
         window.map.setOptions({ disableDefaultUI: true })
       }

@@ -10,6 +10,12 @@
   >
     Copy Run Info
   </button>
+  <button
+    class="member-login"
+    @click="window.open('https://members.balihash2.com/applogin.asp')"
+  >
+    Members login
+  </button>
   <HareLine
     v-if="showPreviousRuns"
     :hare-line="fullHairLine"
@@ -109,7 +115,8 @@ body {
 
   .print-button,
   .past-map-button,
-  .copy-details-button {
+  .copy-details-button,
+  .member-login {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -136,6 +143,13 @@ body {
       display: none;
     }
   }
+
+  .member-login {
+    top: 0;
+    right: 0;
+    left: unset;
+    bottom: unset;
+  }
 }
 
 @media print {
@@ -146,7 +160,8 @@ body {
 
   .print-button,
   .past-map-button,
-  .copy-details-button {
+  .copy-details-button,
+  .member-login {
     display: none;
   }
 }
