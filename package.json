@@ -10,7 +10,7 @@
     "lint": "prettier src --write"
   },
   "dependencies": {
-    "@googlemaps/js-api-loader": "^1.15.1",
+    "@googlemaps/js-api-loader": "1.16.10",
     "date-fns": "^2.29.3",
     "geo-coordinates-parser": "^1.7.3",
     "html2canvas": "^1.4.1",

@@ -23,80 +23,105 @@
     :on-click-previous-run="onClickPreviousRun"
     @close="showPreviousRuns = false"
   />
-<!--  <BlankPage />-->
+  <!--  <BlankPage />-->
   <Page
     v-if="hairLine && !showPreviousRuns"
     :currentRunInfo="currentRunInfo"
     :mismanagement="mismanagement"
   />
+  <div v-if="isEditMode" class="edit-map">
+    <p>Map Coordinates</p>
+    <input v-model="editedMapCoords" id="coords-input" type="text">
+    <button @click="onSaveMapCoords">Save</button>
+  </div>
   <div class="loading" v-else>
     <h1>Loading...</h1>
   </div>
 </template>
 
 <script setup lang="ts">
-import Page from './components/Page.vue'
-import { onBeforeMount, ref } from 'vue'
-import getHareLine from './utils/getHareLine'
-import { subDays } from 'date-fns'
-import { currentRun, formRunObject } from './utils/currentRun'
-import HareLine from './components/HareLine.vue'
-import copyRunDetailsToClipboard from './utils/create-copy-text'
-import delay from './utils/delay'
+import Page from "./components/Page.vue";
+import { onBeforeMount, onMounted, ref } from "vue";
+import getHareLine from "./utils/getHareLine";
+import { subDays } from "date-fns";
+import { currentRun, formRunObject } from "./utils/currentRun";
+import HareLine from "./components/HareLine.vue";
+import copyRunDetailsToClipboard from "./utils/create-copy-text";
+import delay from "./utils/delay";
+import { convert } from "geo-coordinates-parser";
 
 // Data
 
-const fullHairLine = ref()
-const hairLine = ref()
-const showPreviousRuns = ref()
-const currentRunInfo = ref()
-const mismanagement = ref()
-const copyDetailsButton = ref()
+const fullHairLine = ref();
+const hairLine = ref();
+const showPreviousRuns = ref();
+const currentRunInfo = ref();
+const mismanagement = ref();
+const copyDetailsButton = ref();
+const editedMapCoords = ref('');
+const isEditMode = ref(false);
 
 // Methods
 
-const print = () => window.print()
+const print = () => {
+  const editing = window.location.href.includes("edit")
+  isEditMode.value = false;
+  window.print();
+  isEditMode.value = editing;
+};
 
 const onClickPreviousRun = (run: string[]) => {
-  if (!showPreviousRuns.value) return
-  currentRunInfo.value = formRunObject(run, fullHairLine)
-  showPreviousRuns.value = false
-}
+  if (!showPreviousRuns.value) return;
+  currentRunInfo.value = formRunObject(run, fullHairLine);
+  showPreviousRuns.value = false;
+};
 
 const onCopyToClipboard = async () => {
-  await copyRunDetailsToClipboard(currentRunInfo.value)
-  copyDetailsButton.value.style.backgroundColor = 'green'
-  await delay(1000)
-  copyDetailsButton.value.style.backgroundColor = 'unset'
-}
+  await copyRunDetailsToClipboard(currentRunInfo.value);
+  copyDetailsButton.value.style.backgroundColor = "green";
+  await delay(1000);
+  copyDetailsButton.value.style.backgroundColor = "unset";
+};
 
 const openMembersPage = () => {
-  Object.assign(document.createElement('a'), {
-    target: '_blank',
-    rel: 'noopener noreferrer',
-    href: 'https://members.balihash2.com/applogin.asp',
+  Object.assign(document.createElement("a"), {
+    target: "_blank",
+    rel: "noopener noreferrer",
+    href: "https://members.balihash2.com/applogin.asp"
   }).click();
-}
+};
+
+const onSaveMapCoords = () => {
+  const converted = convert(editedMapCoords.value)
+  currentRunInfo.value.coordinates = [converted.verbatimLongitude, converted.verbatimLatitude];
+};
 
 // Hooks
 
+onMounted(() => {
+  if (window.location.href.includes("edit")) {
+    document.body.contentEditable = String(true);
+    isEditMode.value = true
+  }
+});
+
 onBeforeMount(async () => {
-  const unfilteredHareLine = await getHareLine()
+  const unfilteredHareLine = await getHareLine();
   // Mismanagement is on 1F on the hareline sheet
-  mismanagement.value = unfilteredHareLine?.[0]?.[5] || undefined
+  mismanagement.value = unfilteredHareLine?.[0]?.[5] || undefined;
   fullHairLine.value = unfilteredHareLine.filter(
     (e: string[]) =>
       // First items needs to be a run number, and the rest need to be present to be a valid run.
       parseInt(e[0]) && e[1] && e[2] && e[3] && e[5]
-  )
+  );
   hairLine.value = unfilteredHareLine.filter(
     (value: string[]) =>
       parseInt(value[0]) > 1500 &&
       value[2] &&
       new Date(value?.[1]) >= subDays(new Date(), 1)
-  )
-  currentRunInfo.value = currentRun(hairLine)
-})
+  );
+  currentRunInfo.value = currentRun(hairLine);
+});
 </script>
 
 <style lang="scss">
@@ -158,6 +183,16 @@ body {
     left: unset;
     bottom: unset;
   }
+}
+
+.edit-map {
+  background: #fff;
+  padding: 1rem;
+  text-align: left;
+  color: #000;
+  position: absolute;
+  top: 50% ;
+  left: 10%;
 }
 
 @media print {
