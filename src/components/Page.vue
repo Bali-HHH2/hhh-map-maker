@@ -56,7 +56,7 @@
           <a
             v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
             class="gps-link"
-            :href="currentRunInfo.googleMapsLink"
+            :href="googleMapsLink"
             target="_blank"
           >
             {{ currentRunInfo.coordinates[1] }},
@@ -123,7 +123,7 @@ import GoogleMap from './GoogleMap.vue'
 import HareLine from './HareLine.vue'
 import delay from '../utils/delay'
 import html2canvas from 'html2canvas'
-import { inject, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import Title from './Title.vue'
 import ImageEditor from "./ImageEditor.vue";
 
@@ -143,7 +143,7 @@ interface pageParameters {
 
 // Props
 
-defineProps<{
+const props = defineProps<{
   currentRunInfo: pageParameters
   mismanagement: string | undefined
 }>()
@@ -194,6 +194,14 @@ window.print = async function () {
 window.onafterprint = function () {
   onAfterPrint()
 }
+
+// Computed
+
+const googleMapsLink = computed(() => {
+  return `https://www.google.com/maps/search/?api=1&query=${props.currentRunInfo.coordinates?.[1]},${
+    props.currentRunInfo.coordinates?.[0]
+  }`
+});
 </script>
 
 <style lang="scss">
