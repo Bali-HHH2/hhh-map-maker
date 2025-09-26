@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import Page from "./components/Page.vue";
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, provide, ref } from "vue";
 import getHareLine from "./utils/getHareLine";
 import { subDays } from "date-fns";
 import { currentRun, formRunObject } from "./utils/currentRun";
@@ -120,8 +120,16 @@ onBeforeMount(async () => {
       value[2] &&
       new Date(value?.[1]) >= subDays(new Date(), 1)
   );
+
   currentRunInfo.value = currentRun(hairLine);
 });
+
+// Inject
+
+provide('globalData', {
+  isEditMode
+})
+
 </script>
 
 <style lang="scss">
@@ -201,6 +209,7 @@ body {
     box-shadow: none;
   }
 
+  .edit-map,
   .print-button,
   .past-map-button,
   .copy-details-button,

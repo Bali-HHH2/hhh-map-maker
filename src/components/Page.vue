@@ -36,6 +36,7 @@
       :class="{ 'print-layout': usePrintCss }"
       ref="realPage"
     >
+      <ImageEditor v-if="currentRunInfo.number && globalData.isEditMode.value" />
       <Title> Next Run</Title>
       <hr />
       <div class="main-info">
@@ -122,8 +123,9 @@ import GoogleMap from './GoogleMap.vue'
 import HareLine from './HareLine.vue'
 import delay from '../utils/delay'
 import html2canvas from 'html2canvas'
-import { ref } from 'vue'
+import { inject, ref } from "vue";
 import Title from './Title.vue'
+import ImageEditor from "./ImageEditor.vue";
 
 interface pageParameters {
   number: string
@@ -154,6 +156,8 @@ const realPage = ref()
 const canvasRef = ref()
 const usePrintCss = ref(false)
 const isPrintMode = ref(false)
+
+const globalData = inject('globalData')
 
 // Methods
 
