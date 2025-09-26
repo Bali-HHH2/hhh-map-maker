@@ -2,7 +2,7 @@
   <button v-show="!isReady && !showCtrls" @click="showCtrls = true" class="add-images-btn">
     Add images
   </button>
-  <div class="image-editor-container" :class="{ 'is-done': isReady || isReady && !showCtrls }">
+  <div class="image-editor-container" :class="{ 'no-interact': isReady || !showCtrls }">
     <!-- File input for adding images -->
     <div class="controls">
       <div v-show="!isReady && showCtrls">
@@ -212,7 +212,7 @@ defineExpose({
   flex-direction: column;
 }
 
-.is-done {
+.no-interact {
   pointer-events: none;
 }
 
