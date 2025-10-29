@@ -24,7 +24,7 @@
       </a>
       <a
         class="A4__website-link"
-        href="http://balihash2.com/next-run-map"
+        href="https://map.balihash2.com/"
         target="_blank"
       >
         http://balihash2.com/next-run-map
@@ -77,35 +77,35 @@
             <p>{{ currentYear }} Mismanagement</p>
             <p v-if="mismanagement">{{ mismanagement }}</p>
             <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
-            <a href="http://balihash2.com/next-run-map" target="_blank"
+            <a href="https://map.balihash2.com/" target="_blank"
               >http://balihash2.com/next-run-map</a
             >
             <div class="mismanagement__links">
+<!--              <a-->
+<!--                class="social-link"-->
+<!--                target="_blank"-->
+<!--                href="https://facebook.com/BaliHash2/"-->
+<!--              >-->
+<!--                <img src="../assets/fb.ico" alt="" />-->
+<!--              </a>-->
+<!--              <a-->
+<!--                class="social-link"-->
+<!--                target="_blank"-->
+<!--                href="https://www.instagram.com/balihash.househarriers2/"-->
+<!--              >-->
+<!--                <img src="../assets/insta.ico" alt="" />-->
+<!--              </a>-->
+<!--              <a-->
+<!--                class="social-link"-->
+<!--                target="_blank"-->
+<!--                href="https://twitter.com/BaliHash2"-->
+<!--              >-->
+<!--                <img src="../assets/twitter.ico" alt="" />-->
+<!--              </a>-->
               <a
                 class="social-link"
                 target="_blank"
-                href="https://facebook.com/BaliHash2/"
-              >
-                <img src="../assets/fb.ico" alt="" />
-              </a>
-              <a
-                class="social-link"
-                target="_blank"
-                href="https://www.instagram.com/balihash.househarriers2/"
-              >
-                <img src="../assets/insta.ico" alt="" />
-              </a>
-              <a
-                class="social-link"
-                target="_blank"
-                href="https://twitter.com/BaliHash2"
-              >
-                <img src="../assets/twitter.ico" alt="" />
-              </a>
-              <a
-                class="social-link"
-                target="_blank"
-                href="http://balihash2.com/subscribe-bali-hash-2/"
+                href="https://balihash2.com/mailing-list/"
               >
                 <img src="../assets/gmail.ico" alt="" />
               </a>
