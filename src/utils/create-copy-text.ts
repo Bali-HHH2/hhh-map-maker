@@ -9,7 +9,7 @@ const copyRunDetailsToClipboard = async (runInfo: ICurrentRun) => {
     Location: ${runInfo.runSiteName}
     Hares: ${runInfo.hares}
     Occasion: ${runInfo.occasion}
-    Coordinates: ${runInfo.coordinates.join(' ')}
+    Coordinates: ${runInfo.coordinates[1]} ${runInfo.coordinates[0]}
     Google maps: ${runInfo.googleMapsLink}
     ${runInfo.remark}`.trim()
 
