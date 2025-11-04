@@ -35,7 +35,7 @@
     <button @click="onSaveMapCoords">Save</button>
   </div>
   <div class="loading" v-else>
-    <h1>Loading...</h1>
+<!--    <h1>Loading...</h1>-->
   </div>
 </template>
 
@@ -213,7 +213,8 @@ body {
   .print-button,
   .past-map-button,
   .copy-details-button,
-  .member-login {
+  .member-login,
+  .loading {
     display: none;
   }
 }
