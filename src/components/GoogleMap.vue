@@ -1,7 +1,7 @@
 <template>
-  <div class="map" ref="mapContainer" v-if="mapCoords" @click="openMapInNewTab">
+  <div class="map" :class="{ 'map--full-page': fullPage }" ref="mapContainer" v-if="showMap" @click="handleMapClick">
     <img class="compass" src="../assets/compass.png" alt="Prost Compass" />
-    <div id="map" ref="googleMap" class="map-container"></div>
+    <div ref="googleMap" class="map-container"></div>
   </div>
   <div v-else class="map-container__no-map">
     <h3 v-if="!mapCoords">No map coordinates published yet...</h3>
@@ -10,21 +10,37 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, toRefs, ref, watch, computed } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
+import type { PropType } from "vue";
 import { Loader } from "@googlemaps/js-api-loader";
 import mapMarker2 from "../assets/pin2.png";
+import footMarker from "../assets/foot.png";
+
+interface LatLng {
+  lat: number;
+  lng: number;
+}
 
 // Vars
 
 let map: google.maps.Map;
-let marker: google.maps.Map;
+let marker: google.maps.Marker;
 
 const props = defineProps({
-  mapCoords: Array
+  mapCoords: Array,
+  pins: {
+    type: Array as PropType<LatLng[]>,
+    default: () => []
+  },
+  fullPage: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const lat = computed(() => parseFloat(props.mapCoords?.[1] as string));
 const lng = computed(() => parseFloat(props.mapCoords?.[0] as string));
+const showMap = computed(() => props.mapCoords || props.pins.length > 0);
 
 // Data
 
@@ -37,26 +53,56 @@ const openMapInNewTab = () => {
   window.open(`https://www.google.com/maps/search/?api=1&query=${lat.value},${lng.value}`);
 };
 
+const handleMapClick = () => {
+  if (!props.pins.length) {
+    openMapInNewTab();
+  }
+};
+
 const setupMap = () => {
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GOOGLEMAPS_API_KEY as string,
     version: "weekly"
   });
-  if (!lat.value || !lng.value) return;
+
+  const hasPins = props.pins.length > 0;
+  if (!hasPins && (!lat.value || !lng.value)) return;
 
   loader.load().then(() => {
-    map = new google.maps.Map(googleMap.value, {
-      center: { lat: lat.value, lng: lng.value },
-      zoom: 15
-    });
-    marker = new google.maps.Marker({
-      position: { lat: lat.value, lng: lng.value },
-      map,
-      icon: mapMarker2
-    });
-    window.map = map;
+    const center = hasPins
+      ? { lat: props.pins[0].lat, lng: props.pins[0].lng }
+      : { lat: lat.value, lng: lng.value };
 
-    console.log(map);
+    map = new google.maps.Map(googleMap.value, {
+      center,
+      zoom: 15,
+      styles: [
+        { featureType: "all", elementType: "labels", stylers: [{ visibility: "off" }] }
+      ]
+    });
+
+    if (hasPins) {
+      const bounds = new google.maps.LatLngBounds();
+      props.pins.forEach(pin => {
+        new google.maps.Marker({
+          position: { lat: pin.lat, lng: pin.lng },
+          map,
+          icon: footMarker,
+          scale: 0.1
+        });
+        bounds.extend({ lat: pin.lat, lng: pin.lng });
+      });
+      map.fitBounds(bounds);
+    } else {
+      marker = new google.maps.Marker({
+        position: { lat: lat.value, lng: lng.value },
+        map,
+        icon: footMarker,
+        scale: 0.1
+      });
+    }
+
+    window.map = map;
 
     // Check if the print param is passed to the page.
     google.maps.event.addListenerOnce(map, "tilesloaded", () => {
@@ -79,10 +125,11 @@ onMounted(async () => {
 });
 
 watch(() => props.mapCoords, () => {
+  if (props.pins.length) return;
   console.log(lat.value, lng.value);
   map.panTo({ lat: lat.value, lng: lng.value });
-  map.setZoom(15)
-  marker.setPosition({ lat: lat.value, lng: lng.value })
+  map.setZoom(15);
+  marker.setPosition({ lat: lat.value, lng: lng.value });
 });
 </script>
 
@@ -100,6 +147,19 @@ watch(() => props.mapCoords, () => {
     left: 10px;
     z-index: 1;
     filter: drop-shadow(0px 0px 2px #fff);
+  }
+
+  &--full-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 500;
+
+    .map-container {
+      height: 100% !important;
+    }
   }
 }
 
