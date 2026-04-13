@@ -15,6 +15,7 @@ import type { PropType } from "vue";
 import { Loader } from "@googlemaps/js-api-loader";
 import mapMarker2 from "../assets/pin2.png";
 import footMarker from "../assets/foot.png";
+import pinIco from "../assets/pin.png";
 
 interface LatLng {
   lat: number;
@@ -74,8 +75,10 @@ const setupMap = () => {
       : { lat: lat.value, lng: lng.value };
 
     map = new google.maps.Map(googleMap.value, {
+      heading: 90,
       center,
       zoom: 15,
+      rotateControl: true,
       styles: [
         { featureType: "all", elementType: "labels", stylers: [{ visibility: "off" }] }
       ]
@@ -87,8 +90,7 @@ const setupMap = () => {
         new google.maps.Marker({
           position: { lat: pin.lat, lng: pin.lng },
           map,
-          icon: footMarker,
-          scale: 0.1
+          icon: { url: pinIco, scaledSize: new google.maps.Size(96/3, 96/3) }
         });
         bounds.extend({ lat: pin.lat, lng: pin.lng });
       });
@@ -97,8 +99,7 @@ const setupMap = () => {
       marker = new google.maps.Marker({
         position: { lat: lat.value, lng: lng.value },
         map,
-        icon: footMarker,
-        scale: 0.1
+        icon: { url: pinIco, scaledSize: new google.maps.Size(96/3, 96/3) }
       });
     }
 
