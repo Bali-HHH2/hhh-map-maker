@@ -66,7 +66,7 @@ const setupMap = () => {
           window.print();
         }
       } else if (window.location.href.includes("screenshot")) {
-        window.map.setOptions({ disableDefaultUI: true });
+        window.map?.setOptions({ disableDefaultUI: true });
       }
     });
   });

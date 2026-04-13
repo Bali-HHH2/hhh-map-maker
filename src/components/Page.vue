@@ -164,7 +164,7 @@ const globalData = inject('globalData')
 const onBeforePrint = async () => {
   // Takes the interactive map, turns it into an image and displays it on ref="pageCanvas"
   usePrintCss.value = true
-  window.map.setOptions({ disableDefaultUI: true }) // Hides the nav button on google map
+  window.map?.setOptions({ disableDefaultUI: true }) // Hides the nav button on google map
   await delay(500)
   canvasRef.value = await html2canvas(realPage.value, {
     backgroundColor: null,
@@ -179,7 +179,7 @@ const onAfterPrint = async () => {
   usePrintCss.value = false
   canvasRef.value.remove()
   canvasRef.value = null
-  window.map.setOptions({ disableDefaultUI: false })
+  window.map?.setOptions({ disableDefaultUI: false })
   isPrintMode.value = false
 }
 
