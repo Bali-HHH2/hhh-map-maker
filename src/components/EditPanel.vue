@@ -25,9 +25,6 @@
       />
       <div class="edit-panel__row">
         <button @click="fileInput?.click()">Add</button>
-        <button @click="imageEditor.toggleMoving()">
-          {{ imageEditor.isMoving ? 'Lock' : 'Move' }}
-        </button>
         <button class="edit-panel__danger" @click="imageEditor.clearCanvas()">
           Clear
         </button>
@@ -98,10 +95,9 @@ const onSave = async () => {
       },
       password.value
     )
-    status.value = 'Saved'
+    window.location.href = window.location.pathname
   } catch (error) {
     status.value = (error as Error).message
-  } finally {
     isSaving.value = false
   }
 }

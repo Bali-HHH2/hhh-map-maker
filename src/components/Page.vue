@@ -51,8 +51,8 @@
         <Title> Next Run</Title>
       </Editable>
       <hr />
-      <Editable name="main-info">
-        <div class="main-info">
+      <div class="main-info">
+        <Editable name="main-info-left">
           <div class="main-info__left">
             <div>Run: #{{ currentRunInfo.number }}</div>
             <div>Date: {{ currentRunInfo.date }}</div>
@@ -64,7 +64,10 @@
             </div>
             <div>Location: {{ currentRunInfo.runSiteName }}</div>
           </div>
-          <div class="main-info__right">
+        </Editable>
+        <div class="main-info__right">
+          <!-- Not saved as text: follows the coordinates so it stays in step with the map. -->
+          <div contenteditable="false">
             GPS:
             <a
               v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
@@ -76,13 +79,15 @@
               {{ currentRunInfo.coordinates[0] }}
             </a>
             <span v-else>Waiting on hares...</span>
+          </div>
+          <Editable name="main-info-right">
             <h2 class="run-occasion" v-if="currentRunInfo.occasion">
               {{ currentRunInfo.occasion }}
             </h2>
             <p class="run-remark">{{ currentRunInfo.remark }}</p>
-          </div>
+          </Editable>
         </div>
-      </Editable>
+      </div>
       <Editable name="hares">
         <div class="hares">Hares: {{ currentRunInfo.hares }}</div>
       </Editable>

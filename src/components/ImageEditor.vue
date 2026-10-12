@@ -1,5 +1,5 @@
 <template>
-  <div class="image-editor-container" :class="{ 'no-interact': !(editable && isMoving) }">
+  <div class="image-editor-container" :class="{ 'no-interact': !(editable && isOverImage) }">
     <div class="canvas-container">
       <canvas ref="canvasRef"></canvas>
     </div>
@@ -11,6 +11,7 @@ import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import * as fabric from "fabric"; // v6
 
 const MAX_IMAGE_SIDE = 1200;
+const REMOVE_ICON_SIZE = 16;
 
 const props = defineProps<{
   editable: boolean
@@ -18,7 +19,41 @@ const props = defineProps<{
 }>();
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
-const isMoving = ref<boolean>(false);
+const isOverImage = ref<boolean>(false);
+
+const drawRemoveIcon = (ctx: CanvasRenderingContext2D, left: number, top: number) => {
+  const half = REMOVE_ICON_SIZE / 2 - 2;
+  ctx.save();
+  ctx.translate(left, top);
+  ctx.strokeStyle = "#dc2626";
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(-half, -half);
+  ctx.lineTo(half, half);
+  ctx.moveTo(half, -half);
+  ctx.lineTo(-half, half);
+  ctx.stroke();
+  ctx.restore();
+};
+
+// Red X beside the rotation handle. Click it to remove the image.
+const removeControl = new fabric.Control({
+  x: 0,
+  y: -0.5,
+  offsetX: 28,
+  offsetY: -28,
+  sizeX: REMOVE_ICON_SIZE,
+  sizeY: REMOVE_ICON_SIZE,
+  cursorStyle: "pointer",
+  render: drawRemoveIcon,
+  mouseUpHandler: (_event, transform) => {
+    const canvas = transform.target.canvas;
+    canvas?.remove(transform.target);
+    canvas?.requestRenderAll();
+    return true;
+  }
+});
 
 // Fabric canvas instance
 let fabricCanvas: fabric.Canvas | null = null;
@@ -28,6 +63,10 @@ onMounted(async () => {
   await nextTick();
   initializeCanvas();
   setupResizeObserver();
+  if (props.editable) {
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerdown", onPointerDown);
+  }
   if (props.images) {
     await fabricCanvas?.loadFromJSON(props.images);
     fabricCanvas?.requestRenderAll();
@@ -35,6 +74,8 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+  window.removeEventListener("pointermove", onPointerMove);
+  window.removeEventListener("pointerdown", onPointerDown);
   if (fabricCanvas) {
     fabricCanvas.dispose();
   }
@@ -57,6 +98,10 @@ const initializeCanvas = (): void => {
 
   // Set initial canvas size
   resizeCanvas();
+
+  fabricCanvas.on("object:added", ({ target }) => {
+    target.controls.remove = removeControl;
+  });
 
   // Configure object controls
   fabric.Object.prototype.set({
@@ -103,7 +148,6 @@ const setupResizeObserver = (): void => {
 const addImages = async (files: FileList) => {
   const images = Array.from(files).filter((file) => file.type.startsWith("image/"));
   await Promise.all(images.map(loadImage));
-  isMoving.value = true;
 };
 
 // Shrinks big photos so the saved edits stay small.
@@ -145,11 +189,17 @@ const loadImage = async (file: File) => {
   fabricCanvas.renderAll();
 };
 
-const toggleMoving = () => {
-  isMoving.value = !isMoving.value;
-  if (isMoving.value) return;
-  fabricCanvas?.discardActiveObject();
-  fabricCanvas?.renderAll();
+// The canvas only takes the pointer over an image, so text under it stays editable.
+const onPointerMove = (event: PointerEvent) => {
+  const isDragging = event.buttons > 0;
+  if (!fabricCanvas || isDragging) return;
+  isOverImage.value = Boolean(fabricCanvas.findTarget(event));
+};
+
+const onPointerDown = (event: PointerEvent) => {
+  if (!fabricCanvas || fabricCanvas.findTarget(event)) return;
+  fabricCanvas.discardActiveObject();
+  fabricCanvas.requestRenderAll();
 };
 
 // Clear all objects from canvas
@@ -160,9 +210,7 @@ const clearCanvas = (): void => {
 };
 
 defineExpose({
-  isMoving,
   addImages,
-  toggleMoving,
   clearCanvas,
   getCanvasData: () => fabricCanvas?.toJSON()
 });

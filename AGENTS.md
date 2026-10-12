@@ -162,23 +162,27 @@ Open `http://localhost:3005/?edit=true`. Editors use it to adjust a run's flyer:
 
 ### Text
 - `document.body.contentEditable = "true"` makes everything editable.
-- Only four regions are saved, each wrapped in `<Editable name="...">` in `Page.vue`: `title`, `main-info`, `hares` and `bottom-info`. The map is not one of them.
+- Only these regions are saved, each wrapped in `<Editable name="...">` in `Page.vue`: `title`, `main-info-left`, `main-info-right` (occasion and remark), `hares` and `bottom-info`. The map is not one of them.
+- The GPS line is outside every region and `contenteditable="false"`. It always follows `currentRunInfo.coordinates`, so setting coordinates updates it.
 - Save stores each region's `innerHTML`. On load, `Editable` renders saved HTML with `v-html` instead of its slot, so Vue still owns the node.
-- A saved region is a **snapshot**. Sheet changes to that region for the same run no longer show. If `main-info` was already saved, setting new coordinates moves the map but not the GPS text, so edit that text by hand.
+- A saved region is a **snapshot**. Sheet changes to that region for the same run no longer show.
 - Saved text shows on mobile too. It is the same DOM, restyled by the mobile CSS.
 
 ### Images (`ImageEditor.vue`, fabric.js v6)
 - Imported as `import * as fabric from "fabric"`. The v6 API is promise-based (`Image.fromURL`, `loadFromJSON`). The `@types/fabric` dependency is for v5 and isn't needed.
 - The canvas fills `.A4`, which is a fixed 21cm × 29.7cm on desktop, so saved `left`/`top` values land in the same place for every desktop viewer.
 - **Not mounted on mobile** (`useIsMobile()`), because the mobile layout would shift the images. It mounts on desktop when in edit mode or when the run has saved `images`.
-- Props: `editable` and `images`, the saved `toJSON()`, loaded on mount. The container is `pointer-events: none` unless `editable && isMoving`, so the page stays clickable and editable underneath.
-- Exposed for `EditPanel`: `addImages(files)`, `toggleMoving()`, `isMoving`, `clearCanvas()` and `getCanvasData()`. `addImages` shrinks each image to at most 1200px webp (`MAX_IMAGE_SIDE`) and stores it inline as a data URL in the JSON. That keeps a KV value small.
+- Props: `editable` and `images`, the saved `toJSON()`, loaded on mount.
+- In edit mode, images can always be moved. A window `pointermove` listener runs `findTarget()` and gives the container `pointer-events` only while the pointer is over an image or the active image's handles. Everywhere else, clicks reach the editable text underneath. A `pointerdown` outside any image deselects. Touch can't hover, so this is desktop only.
+- Every object gets a `remove` control: a red X drawn beside the rotation handle (`offsetX/offsetY` 28px). Clicking it deletes the image.
+- Exposed for `EditPanel`: `addImages(files)`, `clearCanvas()` and `getCanvasData()`. `addImages` shrinks each image to at most 1200px webp (`MAX_IMAGE_SIDE`) and stores it inline as a data URL in the JSON. That keeps a KV value small.
 
 ### EditPanel
 - Fixed to the left of the page, its right edge 1rem from the A4 (`right: calc(50% + 10.5cm + 1rem)`). On mobile it sits static above the page, and it is hidden in print. `contenteditable="false"`.
 - The password is kept in `localStorage` (`editPassword`).
 - Coordinates go through `parseCoordinates`. Parse errors show in the status line.
-- Save collects every `[data-edit-key]` region, the current coordinates, and `getCanvasData()`. On mobile there is no image editor, so it re-sends the saved `images` rather than wiping them.
+- Images section: Add and Clear only.
+- Save collects every `[data-edit-key]` region, the current coordinates, and `getCanvasData()`. On mobile there is no image editor, so it re-sends the saved `images` rather than wiping them. Once the PUT succeeds, it reloads the page without the query string so the editor sees the public page.
 
 ## Printing / PDF
 
