@@ -22,20 +22,27 @@ const currentRun = (hareLine: Ref) => {
   return formRunObject(currentRun, hareLine)
 }
 
+// Coordinates are [longitude, latitude].
+const parseCoordinates = (text: string): string[] => {
+  const converted = convert(text)
+  return [converted.verbatimLongitude, converted.verbatimLatitude]
+}
+
+const googleMapsLink = (coordinates: string[] | null) =>
+  coordinates
+    ? `https://www.google.com/maps/search/?api=1&query=${coordinates[1]},${coordinates[0]}`
+    : '#'
+
+const setCoordinates = (runInfo: ICurrentRun, coordinates: string[]) => {
+  runInfo.coordinates = coordinates
+  runInfo.googleMapsLink = googleMapsLink(coordinates)
+}
+
 const formRunObject = (currentRun: string[], hareLine: Ref): ICurrentRun => {
-  const coordinates = () => {
-    if (!currentRun[5]) return null
-    const converted = convert(currentRun[5])
-    return [converted.verbatimLongitude, converted.verbatimLatitude]
-  }
+  const coordinates = currentRun[5] ? parseCoordinates(currentRun[5]) : null
   const number = currentRun[0] || '?'
   const date = currentRun[1] || '?'
   const hares = currentRun[2] || '?'
-  const googleMapsLink = currentRun[5]
-    ? `https://www.google.com/maps/search/?api=1&query=${coordinates()?.[1]},${
-        coordinates()?.[0]
-      }`
-    : '#'
   const occasion = currentRun[3]
   const runSiteName = currentRun[4] || 'Waiting on hares...'
   const startTime = currentRun[6] || '?'
@@ -45,14 +52,14 @@ const formRunObject = (currentRun: string[], hareLine: Ref): ICurrentRun => {
     number,
     date,
     hares,
-    googleMapsLink,
+    googleMapsLink: googleMapsLink(coordinates),
     occasion,
     runSiteName,
-    coordinates: coordinates(),
+    coordinates,
     filteredHareLine: hareLine.value?.slice(1),
     startTime,
     remark
   }
 }
 
-export { currentRun, formRunObject }
+export { currentRun, formRunObject, parseCoordinates, setCoordinates }

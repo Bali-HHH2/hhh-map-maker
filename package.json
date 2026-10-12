@@ -7,7 +7,9 @@
     "build-ts": "vue-tsc --noEmit && vite build",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "prettier src --write"
+    "lint": "prettier src --write",
+    "api": "wrangler pages dev dist --kv EDITS --port 8788 --compatibility-date 2026-09-01",
+    "test": "bun test test"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "1.16.10",
@@ -19,7 +21,6 @@
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@cloudflare/wrangler": "^1.21.0",
     "@types/mapbox-gl": "^2.7.10",
     "@vitejs/plugin-vue": "^2.3.4",
     "pnpm": "^7.27.1",
@@ -27,6 +28,7 @@
     "sass": "^1.58.3",
     "typescript": "^4.9.5",
     "vite": "^2.9.15",
-    "vue-tsc": "^0.29.8"
+    "vue-tsc": "^0.29.8",
+    "wrangler": "^4.135.0"
   }
 }

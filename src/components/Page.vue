@@ -1,5 +1,10 @@
 <template>
   <div class="A4-container">
+    <EditPanel
+      v-if="globalData.isEditMode.value"
+      :run-info="currentRunInfo"
+      :image-editor="imageEditor"
+    />
     <div
       v-show="isPrintMode"
       class="A4--canvas"
@@ -36,84 +41,97 @@
       :class="{ 'print-layout': usePrintCss }"
       ref="realPage"
     >
-      <ImageEditor v-if="currentRunInfo.number && globalData.isEditMode.value" />
-      <Title> Next Run</Title>
+      <ImageEditor
+        v-if="showImages"
+        ref="imageEditor"
+        :editable="globalData.isEditMode.value"
+        :images="globalData.edits.value.images"
+      />
+      <Editable name="title">
+        <Title> Next Run</Title>
+      </Editable>
       <hr />
-      <div class="main-info">
-        <div class="main-info__left">
-          <div>Run: #{{ currentRunInfo.number }}</div>
-          <div>Date: {{ currentRunInfo.date }}</div>
-          <div v-if="currentRunInfo.startTime.match('4:30')">
-            Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
+      <Editable name="main-info">
+        <div class="main-info">
+          <div class="main-info__left">
+            <div>Run: #{{ currentRunInfo.number }}</div>
+            <div>Date: {{ currentRunInfo.date }}</div>
+            <div v-if="currentRunInfo.startTime.match('4:30')">
+              Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
+            </div>
+            <div class="run-time--nonstandard" v-else>
+              Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
+            </div>
+            <div>Location: {{ currentRunInfo.runSiteName }}</div>
           </div>
-          <div class="run-time--nonstandard" v-else>
-            Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
-          </div>
-          <div>Location: {{ currentRunInfo.runSiteName }}</div>
-        </div>
-        <div class="main-info__right">
-          GPS:
-          <a
-            v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
-            class="gps-link"
-            :href="googleMapsLink"
-            target="_blank"
-          >
-            {{ currentRunInfo.coordinates[1] }},
-            {{ currentRunInfo.coordinates[0] }}
-          </a>
-          <span v-else>Waiting on hares...</span>
-          <h2 class="run-occasion" v-if="currentRunInfo.occasion">
-            {{ currentRunInfo.occasion }}
-          </h2>
-          <p class="run-remark">{{ currentRunInfo.remark }}</p>
-        </div>
-      </div>
-      <div class="hares">Hares: {{ currentRunInfo.hares }}</div>
-      <GoogleMap :map-coords="currentRunInfo.coordinates" />
-      <div class="bottom-info">
-        <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
-          <div class="mismanagement">
-            <p>{{ currentYear }} Mismanagement</p>
-            <p v-if="mismanagement">{{ mismanagement }}</p>
-            <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
-            <a href="https://map.balihash2.com/" target="_blank"
-              >http://balihash2.com/next-run-map</a
+          <div class="main-info__right">
+            GPS:
+            <a
+              v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
+              class="gps-link"
+              :href="googleMapsLink"
+              target="_blank"
             >
-            <div class="mismanagement__links">
-<!--              <a-->
-<!--                class="social-link"-->
-<!--                target="_blank"-->
-<!--                href="https://facebook.com/BaliHash2/"-->
-<!--              >-->
-<!--                <img src="../assets/fb.ico" alt="" />-->
-<!--              </a>-->
-<!--              <a-->
-<!--                class="social-link"-->
-<!--                target="_blank"-->
-<!--                href="https://www.instagram.com/balihash.househarriers2/"-->
-<!--              >-->
-<!--                <img src="../assets/insta.ico" alt="" />-->
-<!--              </a>-->
-<!--              <a-->
-<!--                class="social-link"-->
-<!--                target="_blank"-->
-<!--                href="https://twitter.com/BaliHash2"-->
-<!--              >-->
-<!--                <img src="../assets/twitter.ico" alt="" />-->
-<!--              </a>-->
-              <a
-                class="social-link"
-                target="_blank"
-                href="https://balihash2.com/mailing-list/"
+              {{ currentRunInfo.coordinates[1] }},
+              {{ currentRunInfo.coordinates[0] }}
+            </a>
+            <span v-else>Waiting on hares...</span>
+            <h2 class="run-occasion" v-if="currentRunInfo.occasion">
+              {{ currentRunInfo.occasion }}
+            </h2>
+            <p class="run-remark">{{ currentRunInfo.remark }}</p>
+          </div>
+        </div>
+      </Editable>
+      <Editable name="hares">
+        <div class="hares">Hares: {{ currentRunInfo.hares }}</div>
+      </Editable>
+      <GoogleMap :map-coords="currentRunInfo.coordinates" />
+      <Editable name="bottom-info">
+        <div class="bottom-info">
+          <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
+            <div class="mismanagement">
+              <p>{{ currentYear }} Mismanagement</p>
+              <p v-if="mismanagement">{{ mismanagement }}</p>
+              <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
+              <a href="https://map.balihash2.com/" target="_blank"
+                >http://balihash2.com/next-run-map</a
               >
-                <img src="../assets/gmail.ico" alt="" />
-              </a>
+              <div class="mismanagement__links">
+  <!--              <a-->
+  <!--                class="social-link"-->
+  <!--                target="_blank"-->
+  <!--                href="https://facebook.com/BaliHash2/"-->
+  <!--              >-->
+  <!--                <img src="../assets/fb.ico" alt="" />-->
+  <!--              </a>-->
+  <!--              <a-->
+  <!--                class="social-link"-->
+  <!--                target="_blank"-->
+  <!--                href="https://www.instagram.com/balihash.househarriers2/"-->
+  <!--              >-->
+  <!--                <img src="../assets/insta.ico" alt="" />-->
+  <!--              </a>-->
+  <!--              <a-->
+  <!--                class="social-link"-->
+  <!--                target="_blank"-->
+  <!--                href="https://twitter.com/BaliHash2"-->
+  <!--              >-->
+  <!--                <img src="../assets/twitter.ico" alt="" />-->
+  <!--              </a>-->
+                <a
+                  class="social-link"
+                  target="_blank"
+                  href="https://balihash2.com/mailing-list/"
+                >
+                  <img src="../assets/gmail.ico" alt="" />
+                </a>
+              </div>
             </div>
           </div>
+          <HareLine :hare-line="currentRunInfo.filteredHareLine" />
         </div>
-        <HareLine :hare-line="currentRunInfo.filteredHareLine" />
-      </div>
+      </Editable>
     </div>
   </div>
 </template>
@@ -126,6 +144,9 @@ import html2canvas from 'html2canvas'
 import { computed, inject, ref } from "vue";
 import Title from './Title.vue'
 import ImageEditor from "./ImageEditor.vue";
+import EditPanel from "./EditPanel.vue";
+import Editable from "./Editable.vue";
+import { useIsMobile } from "../composables/useWindowDimensions";
 
 interface pageParameters {
   number: string
@@ -157,7 +178,16 @@ const canvasRef = ref()
 const usePrintCss = ref(false)
 const isPrintMode = ref(false)
 
-const globalData = inject('globalData')
+const globalData: any = inject('globalData')
+const imageEditor = ref()
+const isMobile = useIsMobile()
+
+// Mobile has its own layout, so image positions from the A4 page would be wrong there.
+const showImages = computed(() =>
+  props.currentRunInfo.number &&
+  !isMobile.value &&
+  (globalData.isEditMode.value || globalData.edits.value.images)
+)
 
 // Methods
 

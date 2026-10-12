@@ -78,12 +78,13 @@ onMounted(async () => {
   setupMap();
 });
 
+// Post flush so the #map div exists when coords arrive on a run without a map.
 watch(() => props.mapCoords, () => {
-  console.log(lat.value, lng.value);
+  if (!map) return setupMap();
   map.panTo({ lat: lat.value, lng: lng.value });
   map.setZoom(15)
   marker.setPosition({ lat: lat.value, lng: lng.value })
-});
+}, { flush: "post" });
 </script>
 
 <style lang="scss">

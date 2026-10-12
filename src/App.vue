@@ -25,16 +25,11 @@
   />
   <!--  <BlankPage />-->
   <Page
-    v-if="hairLine && !showPreviousRuns"
+    v-if="currentRunInfo && !showPreviousRuns"
     :currentRunInfo="currentRunInfo"
     :mismanagement="mismanagement"
   />
-  <div v-if="isEditMode" class="edit-map">
-    <p>Map Coordinates</p>
-    <input v-model="editedMapCoords" id="coords-input" type="text">
-    <button @click="onSaveMapCoords">Save</button>
-  </div>
-  <div class="loading" v-else>
+  <div class="loading" v-if="!isEditMode">
 <!--    <h1>Loading...</h1>-->
   </div>
 </template>
@@ -44,11 +39,11 @@ import Page from "./components/Page.vue";
 import { onBeforeMount, onMounted, provide, ref } from "vue";
 import getHareLine from "./utils/getHareLine";
 import { subDays } from "date-fns";
-import { currentRun, formRunObject } from "./utils/currentRun";
+import { currentRun, formRunObject, ICurrentRun, setCoordinates } from "./utils/currentRun";
 import HareLine from "./components/HareLine.vue";
 import copyRunDetailsToClipboard from "./utils/create-copy-text";
 import delay from "./utils/delay";
-import { convert } from "geo-coordinates-parser";
+import { fetchEdits, PageEdits } from "./utils/edits";
 
 // Data
 
@@ -58,8 +53,8 @@ const showPreviousRuns = ref();
 const currentRunInfo = ref();
 const mismanagement = ref();
 const copyDetailsButton = ref();
-const editedMapCoords = ref('');
 const isEditMode = ref(false);
+const edits = ref<PageEdits>({});
 
 // Methods
 
@@ -70,9 +65,15 @@ const print = () => {
   isEditMode.value = editing;
 };
 
-const onClickPreviousRun = (run: string[]) => {
+const showRun = async (runInfo: ICurrentRun) => {
+  edits.value = await fetchEdits(runInfo.number);
+  if (edits.value.coordinates) setCoordinates(runInfo, edits.value.coordinates);
+  currentRunInfo.value = runInfo;
+};
+
+const onClickPreviousRun = async (run: string[]) => {
   if (!showPreviousRuns.value) return;
-  currentRunInfo.value = formRunObject(run, fullHairLine);
+  await showRun(formRunObject(run, fullHairLine));
   showPreviousRuns.value = false;
 };
 
@@ -89,11 +90,6 @@ const openMembersPage = () => {
     rel: "noopener noreferrer",
     href: "https://members.balihash2.com/applogin.asp"
   }).click();
-};
-
-const onSaveMapCoords = () => {
-  const converted = convert(editedMapCoords.value)
-  currentRunInfo.value.coordinates = [converted.verbatimLongitude, converted.verbatimLatitude];
 };
 
 // Hooks
@@ -121,13 +117,15 @@ onBeforeMount(async () => {
       new Date(value?.[1]) >= subDays(new Date(), 1)
   );
 
-  currentRunInfo.value = currentRun(hairLine);
+  await showRun(currentRun(hairLine));
 });
 
 // Inject
 
 provide('globalData', {
-  isEditMode
+  isEditMode,
+  edits,
+  setCoordinates: (coordinates: string[]) => setCoordinates(currentRunInfo.value, coordinates)
 })
 
 </script>
@@ -193,23 +191,12 @@ body {
   }
 }
 
-.edit-map {
-  background: #fff;
-  padding: 1rem;
-  text-align: left;
-  color: #000;
-  position: absolute;
-  top: 50% ;
-  left: 10%;
-}
-
 @media print {
   body {
     margin: 0;
     box-shadow: none;
   }
 
-  .edit-map,
   .print-button,
   .past-map-button,
   .copy-details-button,

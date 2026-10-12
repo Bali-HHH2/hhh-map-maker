@@ -1,5 +1,5 @@
 import { computed, onMounted, onUnmounted, reactive } from 'vue'
-import GlobalCss from '@/common/style/Global.module.scss'
+import GlobalCss from '../style/Global.module.scss'
 const { mobileWidth } = GlobalCss
 
 const cssStringToNumber = (cssString: string): number => {
