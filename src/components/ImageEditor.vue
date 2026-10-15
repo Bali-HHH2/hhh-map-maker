@@ -189,7 +189,7 @@ const loadImage = async (file: File) => {
   fabricCanvas.renderAll();
 };
 
-// The canvas only takes the pointer over an image, so text under it stays editable.
+// The canvas only takes the pointer over an image, so the page under it stays clickable.
 const onPointerMove = (event: PointerEvent) => {
   const isDragging = event.buttons > 0;
   if (!fabricCanvas || isDragging) return;
@@ -202,16 +202,8 @@ const onPointerDown = (event: PointerEvent) => {
   fabricCanvas.requestRenderAll();
 };
 
-// Clear all objects from canvas
-const clearCanvas = (): void => {
-  if (!fabricCanvas) return;
-  fabricCanvas.clear();
-  fabricCanvas.set("backgroundColor", "transparent").requestRenderAll();
-};
-
 defineExpose({
   addImages,
-  clearCanvas,
   getCanvasData: () => fabricCanvas?.toJSON()
 });
 </script>

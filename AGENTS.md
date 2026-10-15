@@ -50,7 +50,7 @@ VITE_GOOGLEMAPS_API_KEY=...
 
 ```
 index.html                  Vite entry; title, favicons, (unused) mapbox css link
-functions/api/edits.js      Pages Function: GET/PUT saved edits in KV
+functions/api/edits.js      Pages Function: GET/PUT/DELETE saved edits in KV
 test/edits.test.js          bun tests for the function (outside functions/ so Pages doesn't route it)
 src/main.ts                 createApp(App).mount('#app')
 src/App.vue                 Root: fetches sheet, derives current run, top-level buttons, edit-mode bootstrap
@@ -61,13 +61,11 @@ src/components/
   HareLine.vue              Upcoming runs list (in-page) and the "Previous Runs" full-page list
   ImageEditor.vue           fabric.js canvas over the A4 page: places images (edit mode) and shows saved ones
   EditPanel.vue             Edit-mode panel: password, map coordinates, image buttons, Save
-  Editable.vue              Wraps a page region; shows its saved HTML instead of the slot when one exists
   BlankPage.vue             Unused blank A4 template (commented out in App.vue)
 src/utils/
   getHareLine.ts            Google Sheets fetch
   edits.ts                  fetchEdits / saveEdits client for /api/edits
-  currentRun.ts             Sheet row → ICurrentRun; picks this week's run; sets document.title;
-                            parseCoordinates / setCoordinates helpers
+  currentRun.ts             Sheet row → ICurrentRun; picks this week's run; sets document.title
   isInCurrentWeek.ts        Monday-to-Sunday week check
   create-copy-text.ts       "Copy Run Info" clipboard text
   delay.ts                  Promise-based sleep
@@ -126,7 +124,7 @@ https://sheets.googleapis.com/v4/spreadsheets/115xv4g_5lk8u_tPBQqj_f8QnE59oQQwCU
 
 ## Runtime flow
 
-1. `App.vue` `onBeforeMount` fetches the sheet, filters it, sets `mismanagement`, then `showRun()` loads the run's saved edits and sets `currentRunInfo`.
+1. `App.vue` `onBeforeMount` fetches the sheet, filters it, sets `mismanagement`, then `showRun()` loads the run's saved images and sets `currentRunInfo`.
 2. `<Page>` renders once `currentRunInfo` is set and the past-runs view is closed.
 3. `Page.vue` renders `Title`, the main info grid (left: run/date/start/location; right: GPS link, occasion, remark), hares, `GoogleMap`, and the footer (mismanagement + `HareLine`).
 4. `GoogleMap.vue` loads the Maps JS API through `Loader` (`version: "weekly"`), centres at zoom 15, adds a marker with `assets/pin2.png`, and stores the map on **`window.map`** so `Page.vue` can toggle `disableDefaultUI` around printing. Clicking the map opens Google Maps in a new tab. A `watch` on `mapCoords` pans the map and moves the marker.
@@ -136,7 +134,7 @@ https://sheets.googleapis.com/v4/spreadsheets/115xv4g_5lk8u_tPBQqj_f8QnE59oQQwCU
    - **Copy Run Info**: puts a plain-text summary on the clipboard and flashes the button green. It is hidden on mobile.
    - **Members login**: opens `https://members.balihash2.com/applogin.asp`.
 
-`App.vue` exposes shared state with `provide('globalData', { isEditMode, edits, setCoordinates })`. Components read it through `inject('globalData')`. It is untyped (`any`), so values are read as `globalData.isEditMode.value`.
+`App.vue` exposes shared state with `provide('globalData', { isEditMode, edits })`. Components read it through `inject('globalData')`. It is untyped (`any`), so values are read as `globalData.isEditMode.value`.
 
 ## URL modes
 
@@ -148,41 +146,34 @@ Every mode is detected with **`window.location.href.includes(...)`**, a plain su
 | `print` | `GoogleMap.vue`, on first `tilesloaded` | Calls `window.print()` automatically (skipped on Firefox) |
 | `screenshot` | `GoogleMap.vue`, on first `tilesloaded` | Hides Google Map UI controls (for headless screenshots) |
 
-## Edit mode (`?edit=true`) and saved edits
+## Edit mode (`?edit=true`) and saved images
 
-Open `http://localhost:3005/?edit=true`. Editors use it to adjust a run's flyer: change text, move the pin, and place images. A save makes the result public.
+Open `http://localhost:3005/?edit=true`. Editors use it to place images on a run's flyer. A save makes the images public. The page text always comes from the sheet and isn't editable.
 
 ### Storage
-- One KV value per **run number** in the `EDITS` namespace: `{ text, coordinates, images }` (`PageEdits` in `src/utils/edits.ts`). Next week's run has no key, so it starts clean.
+- One KV value per **run number** in the `EDITS` namespace: `{ images }` (`PageEdits` in `src/utils/edits.ts`). Next week's run has no key, so it starts clean. Entries saved by older versions may also hold `text` and `coordinates`. Those keys are ignored.
 - `functions/api/edits.js`:
   - `GET /api/edits?run=N` is public and returns `{}` when nothing is saved.
   - `PUT /api/edits` takes `{ run, edits, password }`. It returns 401 unless `password === env.PASSWORD`, the same scheme as hash-bot's `bot/src/worker.js`.
-- `App.vue` `showRun()` loads the run's edits **before** assigning `currentRunInfo`, so the first render already shows them. It is used for both the current run and Past Maps. Saved `coordinates` replace the sheet's through `setCoordinates`, which updates `coordinates` and `googleMapsLink` together.
-- `edits` and `setCoordinates` reach children through `provide('globalData')`.
-
-### Text
-- `document.body.contentEditable = "true"` makes everything editable.
-- Only these regions are saved, each wrapped in `<Editable name="...">` in `Page.vue`: `title`, `main-info-left`, `main-info-right` (occasion and remark), `hares` and `bottom-info`. The map is not one of them.
-- The GPS line is outside every region and `contenteditable="false"`. It always follows `currentRunInfo.coordinates`, so setting coordinates updates it.
-- Save stores each region's `innerHTML`. On load, `Editable` renders saved HTML with `v-html` instead of its slot, so Vue still owns the node.
-- A saved region is a **snapshot**. Sheet changes to that region for the same run no longer show.
-- Saved text shows on mobile too. It is the same DOM, restyled by the mobile CSS.
+  - `DELETE /api/edits` takes `{ run, password }` and removes the run's entry. It uses the same password check.
+- `App.vue` `showRun()` loads the run's saved images **before** assigning `currentRunInfo`, so the first render already shows them. It is used for both the current run and Past Maps.
+- `edits` reaches children through `provide('globalData')`.
 
 ### Images (`ImageEditor.vue`, fabric.js v6)
 - Imported as `import * as fabric from "fabric"`. The v6 API is promise-based (`Image.fromURL`, `loadFromJSON`). The `@types/fabric` dependency is for v5 and isn't needed.
 - The canvas fills `.A4`, which is a fixed 21cm × 29.7cm on desktop, so saved `left`/`top` values land in the same place for every desktop viewer.
 - **Not mounted on mobile** (`useIsMobile()`), because the mobile layout would shift the images. It mounts on desktop when in edit mode or when the run has saved `images`.
 - Props: `editable` and `images`, the saved `toJSON()`, loaded on mount.
-- In edit mode, images can always be moved. A window `pointermove` listener runs `findTarget()` and gives the container `pointer-events` only while the pointer is over an image or the active image's handles. Everywhere else, clicks reach the editable text underneath. A `pointerdown` outside any image deselects. Touch can't hover, so this is desktop only.
+- In edit mode, images can always be moved. A window `pointermove` listener runs `findTarget()` and gives the container `pointer-events` only while the pointer is over an image or the active image's handles. Everywhere else, clicks reach the page underneath (links, map). A `pointerdown` outside any image deselects. Touch can't hover, so this is desktop only.
 - Every object gets a `remove` control: a red X drawn beside the rotation handle (`offsetX/offsetY` 28px). Clicking it deletes the image.
-- Exposed for `EditPanel`: `addImages(files)`, `clearCanvas()` and `getCanvasData()`. `addImages` shrinks each image to at most 1200px webp (`MAX_IMAGE_SIDE`) and stores it inline as a data URL in the JSON. That keeps a KV value small.
+- Exposed for `EditPanel`: `addImages(files)` and `getCanvasData()`. `addImages` shrinks each image to at most 1200px webp (`MAX_IMAGE_SIDE`) and stores it inline as a data URL in the JSON. That keeps a KV value small.
 
 ### EditPanel
-- Fixed to the left of the page, its right edge 1rem from the A4 (`right: calc(50% + 10.5cm + 1rem)`). On mobile it sits static above the page, and it is hidden in print. `contenteditable="false"`.
+- Fixed to the left of the page, its right edge 1rem from the A4 (`right: calc(50% + 10.5cm + 1rem)`). On mobile it sits static above the page, and it is hidden in print.
 - The password is kept in `localStorage` (`editPassword`).
-- Coordinates go through `parseCoordinates`. Parse errors show in the status line.
-- Images section: Add and Clear only.
-- Save collects every `[data-edit-key]` region, the current coordinates, and `getCanvasData()`. On mobile there is no image editor, so it re-sends the saved `images` rather than wiping them. Once the PUT succeeds, it reloads the page without the query string so the editor sees the public page.
+- Images section: Add and Clear only. After a confirm, **Clear** sends `DELETE` for the run, which removes its saved images. It then reloads in edit mode.
+- **Save** sends `{ images: getCanvasData() }`. Once the PUT succeeds, it reloads the page without the query string so the editor sees the public page.
+- On mobile there is no image editor, so the Images section and Save are hidden and only the password field shows.
 
 ## Printing / PDF
 

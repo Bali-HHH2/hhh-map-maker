@@ -1,17 +1,9 @@
 <template>
-  <aside class="edit-panel" contenteditable="false">
+  <aside class="edit-panel">
     <label class="edit-panel__field">
       <span>Password</span>
       <input v-model="password" type="password" autocomplete="current-password" />
     </label>
-
-    <form class="edit-panel__field" @submit.prevent="onSetCoordinates">
-      <span>Map coordinates</span>
-      <div class="edit-panel__row">
-        <input v-model="coordinatesText" type="text" placeholder="-8.387177, 115.304397" />
-        <button type="submit">Set</button>
-      </div>
-    </form>
 
     <div v-if="imageEditor" class="edit-panel__field">
       <span>Images</span>
@@ -25,13 +17,18 @@
       />
       <div class="edit-panel__row">
         <button @click="fileInput?.click()">Add</button>
-        <button class="edit-panel__danger" @click="imageEditor.clearCanvas()">
+        <button class="edit-panel__danger" @click="onClear">
           Clear
         </button>
       </div>
     </div>
 
-    <button class="edit-panel__primary" :disabled="isSaving" @click="onSave">
+    <button
+      v-if="imageEditor"
+      class="edit-panel__primary"
+      :disabled="isSaving"
+      @click="onSave"
+    >
       {{ isSaving ? 'Saving...' : 'Save changes' }}
     </button>
     <p v-if="status" class="edit-panel__status">{{ status }}</p>
@@ -39,9 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, watch } from 'vue'
-import { ICurrentRun, parseCoordinates } from '../utils/currentRun'
-import { saveEdits } from '../utils/edits'
+import { ref, watch } from 'vue'
+import { ICurrentRun } from '../utils/currentRun'
+import { deleteEdits, saveEdits } from '../utils/edits'
 
 const PASSWORD_KEY = 'editPassword'
 
@@ -50,24 +47,12 @@ const props = defineProps<{
   imageEditor?: any
 }>()
 
-const globalData: any = inject('globalData')
-
 const password = ref(localStorage.getItem(PASSWORD_KEY) ?? '')
-const coordinatesText = ref('')
 const fileInput = ref<HTMLInputElement>()
 const isSaving = ref(false)
 const status = ref('')
 
 watch(password, (value) => localStorage.setItem(PASSWORD_KEY, value))
-
-const onSetCoordinates = () => {
-  try {
-    globalData.setCoordinates(parseCoordinates(coordinatesText.value))
-    status.value = ''
-  } catch (error) {
-    status.value = (error as Error).message
-  }
-}
 
 const onFilesPicked = async (event: Event) => {
   const input = event.target as HTMLInputElement
@@ -75,11 +60,15 @@ const onFilesPicked = async (event: Event) => {
   input.value = ''
 }
 
-const collectEditedText = () => {
-  const regions = document.querySelectorAll<HTMLElement>('[data-edit-key]')
-  return Object.fromEntries(
-    Array.from(regions).map((region) => [region.dataset.editKey, region.innerHTML])
-  )
+const onClear = async () => {
+  const run = props.runInfo.number
+  if (!confirm(`Delete all saved images for run #${run}?`)) return
+  try {
+    await deleteEdits(run, password.value)
+    window.location.reload()
+  } catch (error) {
+    status.value = (error as Error).message
+  }
 }
 
 const onSave = async () => {
@@ -87,12 +76,7 @@ const onSave = async () => {
   try {
     await saveEdits(
       props.runInfo.number,
-      {
-        text: collectEditedText(),
-        coordinates: props.runInfo.coordinates,
-        // No image editor on mobile. Keep the saved images.
-        images: props.imageEditor?.getCanvasData() ?? globalData.edits.value.images
-      },
+      { images: props.imageEditor.getCanvasData() },
       password.value
     )
     window.location.href = window.location.pathname
@@ -153,11 +137,6 @@ $a4-half-width: 10.5cm;
   &__row {
     display: flex;
     gap: 0.5rem;
-
-    input {
-      flex: 1;
-      min-width: 0;
-    }
 
     button {
       flex: 1;

@@ -33,11 +33,6 @@ const googleMapsLink = (coordinates: string[] | null) =>
     ? `https://www.google.com/maps/search/?api=1&query=${coordinates[1]},${coordinates[0]}`
     : '#'
 
-const setCoordinates = (runInfo: ICurrentRun, coordinates: string[]) => {
-  runInfo.coordinates = coordinates
-  runInfo.googleMapsLink = googleMapsLink(coordinates)
-}
-
 const formRunObject = (currentRun: string[], hareLine: Ref): ICurrentRun => {
   const coordinates = currentRun[5] ? parseCoordinates(currentRun[5]) : null
   const number = currentRun[0] || '?'
@@ -62,4 +57,4 @@ const formRunObject = (currentRun: string[], hareLine: Ref): ICurrentRun => {
   }
 }
 
-export { currentRun, formRunObject, parseCoordinates, setCoordinates }
+export { currentRun, formRunObject }

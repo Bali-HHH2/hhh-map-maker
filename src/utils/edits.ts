@@ -1,6 +1,4 @@
 export interface PageEdits {
-  text?: Record<string, string>
-  coordinates?: string[]
   images?: object
 }
 
@@ -14,11 +12,17 @@ export const fetchEdits = async (run: string): Promise<PageEdits> => {
   }
 }
 
-export const saveEdits = async (run: string, edits: PageEdits, password: string) => {
+const sendEdits = async (method: 'PUT' | 'DELETE', body: object) => {
   const response = await fetch('/api/edits', {
-    method: 'PUT',
+    method,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ run, edits, password })
+    body: JSON.stringify(body)
   })
   if (!response.ok) throw new Error(await response.text())
 }
+
+export const saveEdits = (run: string, edits: PageEdits, password: string) =>
+  sendEdits('PUT', { run, edits, password })
+
+export const deleteEdits = (run: string, password: string) =>
+  sendEdits('DELETE', { run, password })

@@ -20,3 +20,12 @@ export const onRequestPut = async ({ request, env }) => {
   await env.EDITS.put(String(run), JSON.stringify(edits))
   return new Response(null, { status: 204 })
 }
+
+export const onRequestDelete = async ({ request, env }) => {
+  const { password, run } = await request.json()
+  if (password !== env.PASSWORD) return new Response('Wrong password', { status: 401 })
+  if (!RUN_NUMBER.test(String(run))) return new Response('Bad run number', { status: 400 })
+
+  await env.EDITS.delete(String(run))
+  return new Response(null, { status: 204 })
+}

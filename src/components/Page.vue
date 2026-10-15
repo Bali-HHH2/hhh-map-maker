@@ -47,96 +47,83 @@
         :editable="globalData.isEditMode.value"
         :images="globalData.edits.value.images"
       />
-      <Editable name="title">
-        <Title> Next Run</Title>
-      </Editable>
+      <Title> Next Run</Title>
       <hr />
       <div class="main-info">
-        <Editable name="main-info-left">
-          <div class="main-info__left">
-            <div>Run: #{{ currentRunInfo.number }}</div>
-            <div>Date: {{ currentRunInfo.date }}</div>
-            <div v-if="currentRunInfo.startTime.match('4:30')">
-              Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
-            </div>
-            <div class="run-time--nonstandard" v-else>
-              Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
-            </div>
-            <div>Location: {{ currentRunInfo.runSiteName }}</div>
+        <div class="main-info__left">
+          <div>Run: #{{ currentRunInfo.number }}</div>
+          <div>Date: {{ currentRunInfo.date }}</div>
+          <div v-if="currentRunInfo.startTime.match('4:30')">
+            Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
           </div>
-        </Editable>
+          <div class="run-time--nonstandard" v-else>
+            Start {{ currentRunInfo.startTime }}! BRING YOUR QR!
+          </div>
+          <div>Location: {{ currentRunInfo.runSiteName }}</div>
+        </div>
         <div class="main-info__right">
-          <!-- Not saved as text: follows the coordinates so it stays in step with the map. -->
-          <div contenteditable="false">
-            GPS:
-            <a
-              v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
-              class="gps-link"
-              :href="googleMapsLink"
-              target="_blank"
-            >
-              {{ currentRunInfo.coordinates[1] }},
-              {{ currentRunInfo.coordinates[0] }}
-            </a>
-            <span v-else>Waiting on hares...</span>
-          </div>
-          <Editable name="main-info-right">
-            <h2 class="run-occasion" v-if="currentRunInfo.occasion">
-              {{ currentRunInfo.occasion }}
-            </h2>
-            <p class="run-remark">{{ currentRunInfo.remark }}</p>
-          </Editable>
+          GPS:
+          <a
+            v-if="currentRunInfo.coordinates && currentRunInfo.googleMapsLink"
+            class="gps-link"
+            :href="googleMapsLink"
+            target="_blank"
+          >
+            {{ currentRunInfo.coordinates[1] }},
+            {{ currentRunInfo.coordinates[0] }}
+          </a>
+          <span v-else>Waiting on hares...</span>
+          <h2 class="run-occasion" v-if="currentRunInfo.occasion">
+            {{ currentRunInfo.occasion }}
+          </h2>
+          <p class="run-remark">{{ currentRunInfo.remark }}</p>
         </div>
       </div>
-      <Editable name="hares">
-        <div class="hares">Hares: {{ currentRunInfo.hares }}</div>
-      </Editable>
+      <div class="hares">Hares: {{ currentRunInfo.hares }}</div>
       <GoogleMap :map-coords="currentRunInfo.coordinates" />
-      <Editable name="bottom-info">
-        <div class="bottom-info">
-          <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
-            <div class="mismanagement">
-              <p>{{ currentYear }} Mismanagement</p>
-              <p v-if="mismanagement">{{ mismanagement }}</p>
-              <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
-              <a href="https://map.balihash2.com/" target="_blank"
-                >http://balihash2.com/next-run-map</a
+      <div class="bottom-info">
+        <div v-if="currentRunInfo.filteredHareLine" class="bottom-info__left">
+          <div class="mismanagement">
+            <p>{{ currentYear }} Mismanagement</p>
+            <p v-if="mismanagement">{{ mismanagement }}</p>
+            <p>© {{ currentYear }} | Bali Hash House Harriers 2</p>
+            <a href="https://map.balihash2.com/" target="_blank"
+              >http://balihash2.com/next-run-map</a
+            >
+            <div class="mismanagement__links">
+<!--              <a-->
+<!--                class="social-link"-->
+<!--                target="_blank"-->
+<!--                href="https://facebook.com/BaliHash2/"-->
+<!--              >-->
+<!--                <img src="../assets/fb.ico" alt="" />-->
+<!--              </a>-->
+<!--              <a-->
+<!--                class="social-link"-->
+<!--                target="_blank"-->
+<!--                href="https://www.instagram.com/balihash.househarriers2/"-->
+<!--              >-->
+<!--                <img src="../assets/insta.ico" alt="" />-->
+<!--              </a>-->
+<!--              <a-->
+<!--                class="social-link"-->
+<!--                target="_blank"-->
+<!--                href="https://twitter.com/BaliHash2"-->
+<!--              >-->
+<!--                <img src="../assets/twitter.ico" alt="" />-->
+<!--              </a>-->
+              <a
+                class="social-link"
+                target="_blank"
+                href="https://balihash2.com/mailing-list/"
               >
-              <div class="mismanagement__links">
-  <!--              <a-->
-  <!--                class="social-link"-->
-  <!--                target="_blank"-->
-  <!--                href="https://facebook.com/BaliHash2/"-->
-  <!--              >-->
-  <!--                <img src="../assets/fb.ico" alt="" />-->
-  <!--              </a>-->
-  <!--              <a-->
-  <!--                class="social-link"-->
-  <!--                target="_blank"-->
-  <!--                href="https://www.instagram.com/balihash.househarriers2/"-->
-  <!--              >-->
-  <!--                <img src="../assets/insta.ico" alt="" />-->
-  <!--              </a>-->
-  <!--              <a-->
-  <!--                class="social-link"-->
-  <!--                target="_blank"-->
-  <!--                href="https://twitter.com/BaliHash2"-->
-  <!--              >-->
-  <!--                <img src="../assets/twitter.ico" alt="" />-->
-  <!--              </a>-->
-                <a
-                  class="social-link"
-                  target="_blank"
-                  href="https://balihash2.com/mailing-list/"
-                >
-                  <img src="../assets/gmail.ico" alt="" />
-                </a>
-              </div>
+                <img src="../assets/gmail.ico" alt="" />
+              </a>
             </div>
           </div>
-          <HareLine :hare-line="currentRunInfo.filteredHareLine" />
         </div>
-      </Editable>
+        <HareLine :hare-line="currentRunInfo.filteredHareLine" />
+      </div>
     </div>
   </div>
 </template>
@@ -150,7 +137,6 @@ import { computed, inject, ref } from "vue";
 import Title from './Title.vue'
 import ImageEditor from "./ImageEditor.vue";
 import EditPanel from "./EditPanel.vue";
-import Editable from "./Editable.vue";
 import { useIsMobile } from "../composables/useWindowDimensions";
 
 interface pageParameters {

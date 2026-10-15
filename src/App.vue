@@ -39,7 +39,7 @@ import Page from "./components/Page.vue";
 import { onBeforeMount, onMounted, provide, ref } from "vue";
 import getHareLine from "./utils/getHareLine";
 import { subDays } from "date-fns";
-import { currentRun, formRunObject, ICurrentRun, setCoordinates } from "./utils/currentRun";
+import { currentRun, formRunObject, ICurrentRun } from "./utils/currentRun";
 import HareLine from "./components/HareLine.vue";
 import copyRunDetailsToClipboard from "./utils/create-copy-text";
 import delay from "./utils/delay";
@@ -67,7 +67,6 @@ const print = () => {
 
 const showRun = async (runInfo: ICurrentRun) => {
   edits.value = await fetchEdits(runInfo.number);
-  if (edits.value.coordinates) setCoordinates(runInfo, edits.value.coordinates);
   currentRunInfo.value = runInfo;
 };
 
@@ -96,7 +95,6 @@ const openMembersPage = () => {
 
 onMounted(() => {
   if (window.location.href.includes("edit")) {
-    document.body.contentEditable = String(true);
     isEditMode.value = true
   }
 });
@@ -124,8 +122,7 @@ onBeforeMount(async () => {
 
 provide('globalData', {
   isEditMode,
-  edits,
-  setCoordinates: (coordinates: string[]) => setCoordinates(currentRunInfo.value, coordinates)
+  edits
 })
 
 </script>
